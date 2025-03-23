@@ -1,7 +1,20 @@
 import datetime as dt
+from functools import wraps
 
 import pandas as pd
 import yfinance as yf
+
+
+def lazy_load_data(func):
+    """Decorator to ensure data is fetched before method execution - lazy loading"""
+
+    @wraps(func)
+    def wrapper(self, *args, force_refresh=False, **kwargs):
+        if (self._data is None) or force_refresh:  # Check if refresh is required
+            self._fetch_data()
+        return func(self, *args, **kwargs)
+
+    return wrapper
 
 
 class DataHandler:
@@ -19,26 +32,24 @@ class DataHandler:
             self._data = yf.download(
                 self.tickers, start=self.start_date, end=self.end_date, group_by="ticker"
             )
+            pass
         except Exception as e:
             print(f"Error fetching data: {e}")
             self._data = None
 
+    @lazy_load_data
     def get_full_data(self):
         """Public getter method to access data."""
-        if self._data is None:  # lazy loading - could be implemented with decorator
-            self._fetch_data()
-
         return self._data
 
+    @lazy_load_data
     def get_close_prices(self):
-        if self._data is None:
-            self._fetch_data()
-
+        """Public getter method to access close price data."""
         return self._data.xs(key="Close", axis=1, level=1)
 
 
 if __name__ == "__main__":
-    tickers = ["AMZN"]
+    tickers = ["AMZN", "MSFT", "GOOG"]
     start_date = dt.datetime(2025, 1, 1)
     end_date = dt.datetime(2025, 1, 7)
     data = DataHandler(tickers, start_date, end_date)
