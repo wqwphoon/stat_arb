@@ -1,4 +1,6 @@
-import pandas as pd
+import datetime as dt
+
+from stat_arb.model.data_handler import DataHandler
 
 
 class BivariateEngleGranger:
@@ -6,9 +8,9 @@ class BivariateEngleGranger:
         self,
         ticker_a: str,
         ticker_b: str,
-        start_date: pd.DateTime,
-        end_date: pd.DateTime,
-        live_start_date: pd.DateTime,
+        start_date: dt.datetime,
+        end_date: dt.datetime,
+        live_start_date: dt.datetime,
     ):
         self.ticker_a = ticker_a
         self.ticker_b = ticker_b
@@ -17,4 +19,19 @@ class BivariateEngleGranger:
         self.live_start_date = live_start_date
 
     def run(self):
+        data = DataHandler([self.ticker_a, self.ticker_b], self.start_date, self.end_date)
+
+        data.get_close_prices()
+
         pass
+
+
+if __name__ == "__main__":
+    ticker_a = "MA"
+    ticker_b = "V"
+    start = dt.datetime(2025, 1, 1)
+    end = dt.datetime(2025, 1, 8)
+    live = dt.datetime(2025, 1, 6)
+    model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live)
+    model.run()
+    pass

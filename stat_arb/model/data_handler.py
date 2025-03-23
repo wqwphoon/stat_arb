@@ -1,6 +1,7 @@
 import datetime as dt
 from functools import wraps
 
+import numpy as np
 import pandas as pd
 import yfinance as yf
 
@@ -28,7 +29,8 @@ class DataHandler:
             end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
         if end_date < start_date:
             raise ValueError("End date must not be before start date")
-        # TODO: Transform tickers into a list[str] ?
+        if isinstance(tickers, str):
+            tickers = [tickers]
 
         self.tickers = tickers
         self.start_date = start_date
@@ -58,6 +60,20 @@ class DataHandler:
         """Public getter method to access close price data."""
         return self._data.xs(key="Close", axis=1, level=1)
 
+    def get_simulated_close_prices(self) -> pd.DataFrame:
+        n: int = len(self.tickers)
+
+        period: pd.DatetimeIndex = pd.date_range(self.start_date, self.end_date)
+        period: list[pd.Timestamp] = [date for date in period if self.is_weekday(date)]
+
+        prices: np.ndarray = 1 + np.random.normal(size=[len(period), n]).cumsum(axis=0) / 100
+        prices: pd.DataFrame = pd.DataFrame(prices, columns=self.tickers, index=period)
+
+        return prices
+
+    def is_weekday(self, date: pd.Timestamp):
+        return date.dayofweek not in [5, 6]
+
 
 if __name__ == "__main__":
     tickers = "^SPX"
@@ -65,4 +81,5 @@ if __name__ == "__main__":
     end_date = dt.datetime(2025, 1, 7)
     data = DataHandler(tickers, start_date, end_date)
     data.get_close_prices()
+    data.get_simulated_close_prices()
     pass
