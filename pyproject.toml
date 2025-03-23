@@ -1,5 +1,5 @@
 [project]
-name = "stat-arb"
+name = "stat_arb"
 version = "0.1.0"
 description = "scraps of stat_arb"
 authors = [
