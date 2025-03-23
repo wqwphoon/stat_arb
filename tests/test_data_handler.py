@@ -31,6 +31,13 @@ def test_spx_jan_2025_with_datetime():
     assert not data.empty
 
 
+def test_spx_jan_2025_with_str_ticker():
+    data = DataHandler("^SPX", START_2025, DELTA_WEEK_2025)
+    data = data.get_close_prices()
+    assert isinstance(data, pd.DataFrame)
+    assert not data.empty
+
+
 def test_multiple_jan_2025():
     tickers = ["^SPX", "^FTSE"]
     data = DataHandler(tickers, START_2025, DELTA_WEEK_2025)

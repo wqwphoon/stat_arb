@@ -18,7 +18,7 @@ def lazy_load_data(func):
 
 
 class DataHandler:
-    def __init__(self, tickers: list[str], start_date: dt.datetime | str, end_date: dt.datetime | str):
+    def __init__(self, tickers: list[str] | str, start_date: dt.datetime | str, end_date: dt.datetime | str):
         # Perform validation of input parameters
         if not tickers:
             raise ValueError("Tickers list cannot be empty.")
@@ -28,6 +28,7 @@ class DataHandler:
             end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
         if end_date < start_date:
             raise ValueError("End date must not be before start date")
+        # TODO: Transform tickers into a list[str] ?
 
         self.tickers = tickers
         self.start_date = start_date
@@ -59,7 +60,7 @@ class DataHandler:
 
 
 if __name__ == "__main__":
-    tickers = []
+    tickers = "^SPX"
     start_date = dt.datetime(2025, 1, 1)
     end_date = dt.datetime(2025, 1, 7)
     data = DataHandler(tickers, start_date, end_date)
