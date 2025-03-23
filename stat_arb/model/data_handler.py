@@ -19,8 +19,15 @@ def lazy_load_data(func):
 
 class DataHandler:
     def __init__(self, tickers: list[str], start_date: dt.datetime | str, end_date: dt.datetime | str):
+        # Perform validation of input parameters
         if not tickers:
             raise ValueError("Tickers list cannot be empty.")
+        if isinstance(start_date, str):
+            start_date = dt.datetime.strptime(start_date, "%Y-%m-%d")
+        if isinstance(end_date, str):
+            end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
+        if end_date < start_date:
+            raise ValueError("End date must not be before start date")
 
         self.tickers = tickers
         self.start_date = start_date
@@ -28,7 +35,7 @@ class DataHandler:
 
         self._data: pd.DataFrame | None = None
 
-    def _fetch_data(self):
+    def _fetch_data(self) -> None:
         """Private method to fetch data from yfinance - ensures encapsulation."""
         try:
             print("Fetching data from Yahoo Finance...")
@@ -41,12 +48,12 @@ class DataHandler:
             self._data = None
 
     @lazy_load_data
-    def get_full_data(self):
+    def get_full_data(self) -> pd.DataFrame:
         """Public getter method to access data."""
         return self._data
 
     @lazy_load_data
-    def get_close_prices(self):
+    def get_close_prices(self) -> pd.DataFrame:
         """Public getter method to access close price data."""
         return self._data.xs(key="Close", axis=1, level=1)
 
