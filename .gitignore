@@ -3,3 +3,6 @@
 *.egg-info
 
 stat_arb.log
+
+notebooks/.ipynb_checkpoints/
+*.ipynb_checkpoints/
