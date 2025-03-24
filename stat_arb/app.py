@@ -1,6 +1,6 @@
 import logging
 
-from stat_arb.model.data_handler import DataHandler
+from stat_arb.model.data_handler.data_handler import DataHandler
 
 
 def main():

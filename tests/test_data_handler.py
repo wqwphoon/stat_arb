@@ -3,7 +3,7 @@ import datetime as dt
 import pandas as pd
 import pytest
 
-from stat_arb.model.data_handler import DataHandler
+from stat_arb.model.data_handler.data_handler import DataHandler
 
 START_2025 = "2025-01-01"
 DELTA_WEEK_2025 = "2025-01-08"
