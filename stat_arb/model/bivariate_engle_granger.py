@@ -1,8 +1,6 @@
 import datetime as dt
 
-from stat_arb.model.data_handler.data_handler import DataHandler
-from stat_arb.model.data_handler.simulated_data_handler import SimulatedDataHandler
-from stat_arb.model.data_handler.yahoo_finance_data_handler import YahooFinanceDataHandler
+from stat_arb.model.data_handler import DataHandler, DataHandlerFactory
 
 
 class BivariateEngleGranger:
@@ -23,14 +21,9 @@ class BivariateEngleGranger:
         self.data_handler_identifier = data_handler_identifier
 
     def run(self):
-        if self.data_handler_identifier == "Yahoo":
-            data: DataHandler = YahooFinanceDataHandler(
-                [self.ticker_a, self.ticker_b], self.start_date, self.end_date
-            )
-        elif self.data_handler_identifier == "Simulated":
-            data: DataHandler = SimulatedDataHandler(
-                [self.ticker_a, self.ticker_b], self.start_date, self.end_date
-            )
+        data = DataHandlerFactory.create_data_handler(
+            self.data_handler_identifier, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
+        )
 
         data.get_close_prices()
 
@@ -43,6 +36,6 @@ if __name__ == "__main__":
     start = dt.datetime(2025, 1, 1)
     end = dt.datetime(2025, 1, 8)
     live = dt.datetime(2025, 1, 6)
-    model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, "Simulated")
+    model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, "Yahoo")
     model.run()
     pass
