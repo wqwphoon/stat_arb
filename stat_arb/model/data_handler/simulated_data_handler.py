@@ -24,8 +24,6 @@ class SimulatedDataHandler(DataHandler):
         self.start_date = start_date
         self.end_date = end_date
 
-        self._data: pd.DataFrame | None = None
-
     def get_close_prices(self) -> pd.DataFrame:
         n: int = len(self.tickers)
 

@@ -1,4 +1,5 @@
 from stat_arb.model.data_handler import DataHandler
+from stat_arb.model.data_handler.data_handler_enum import DataHandlerEnum
 from stat_arb.model.data_handler.simulated_data_handler import SimulatedDataHandler
 from stat_arb.model.data_handler.yahoo_finance_data_handler import YahooFinanceDataHandler
 
@@ -8,9 +9,9 @@ class DataHandlerFactory:
 
     @staticmethod
     def create_data_handler(identifier: str, tickers, start_date, end_date) -> DataHandler:
-        if identifier == "Yahoo":
+        if identifier == DataHandlerEnum.YAHOO:
             return YahooFinanceDataHandler(tickers, start_date, end_date)
-        elif identifier == "Simulated":
+        elif identifier == DataHandlerEnum.SIMULATED:
             return SimulatedDataHandler(tickers, start_date, end_date)
         else:
-            raise ValueError(f"Unknown data handler identifer: {identifier}")
+            raise ValueError(f"Unknown data handler identifier: {identifier}")
