@@ -35,8 +35,12 @@ class SimulatedDataHandler(DataHandler):
 
         return prices
 
-    def is_weekday(self, date: pd.Timestamp):
+    def is_weekday(self, date: pd.Timestamp) -> bool:
         return date.dayofweek not in [5, 6]
+
+    def get_normalised_close_prices(self) -> pd.DataFrame:
+        close = self.get_close_prices()
+        return close.div(close.iloc[0])
 
 
 if __name__ == "__main__":

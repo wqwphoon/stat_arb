@@ -61,6 +61,10 @@ class YahooFinanceDataHandler(DataHandler):
         """Public getter method to access close price data."""
         return self._data.xs(key="Close", axis=1, level=1)
 
+    def get_normalised_close_prices(self) -> pd.DataFrame:
+        close = self.get_close_prices()
+        return close.div(close.iloc[0])
+
 
 if __name__ == "__main__":
     tickers = "^SPX"

@@ -50,3 +50,12 @@ def test_multiple_jan_2025():
 def test_invalid_date_ranges():
     with pytest.raises(ValueError):
         YahooFinanceDataHandler(["^SPX"], DELTA_WEEK_2025, START_2025)
+
+
+def test_normalisation():
+    data = YahooFinanceDataHandler("^SPX", START_2025, DELTA_WEEK_2025)
+    close = data.get_close_prices()
+    normalised = data.get_normalised_close_prices()
+
+    assert normalised.multiply(close.iloc[0]).equals(close)
+    assert normalised.iloc[0, 0] == 1

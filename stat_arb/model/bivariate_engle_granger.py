@@ -26,6 +26,7 @@ class BivariateEngleGranger:
         )
 
         data.get_close_prices()
+        data.get_normalised_close_prices()
 
         pass
 
@@ -36,7 +37,7 @@ if __name__ == "__main__":
     start = dt.datetime(2025, 1, 1)
     end = dt.datetime(2025, 1, 8)
     live = dt.datetime(2025, 1, 6)
-    dataenum = DataHandlerEnum.SIMULATED
-    model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, dataenum)
+    data_enum = DataHandlerEnum.SIMULATED
+    model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, data_enum)
     model.run()
     pass

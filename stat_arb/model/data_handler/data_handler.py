@@ -7,3 +7,7 @@ class DataHandler(ABC):
     @abstractmethod
     def get_close_prices(self):
         pass
+
+    @abstractmethod
+    def get_normalised_close_prices(self):
+        pass
