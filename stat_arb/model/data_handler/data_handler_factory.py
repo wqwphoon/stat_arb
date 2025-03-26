@@ -1,7 +1,11 @@
+import logging
+
 from stat_arb.model.data_handler import DataHandler
 from stat_arb.model.data_handler.data_handler_enum import DataHandlerEnum
 from stat_arb.model.data_handler.simulated_data_handler import SimulatedDataHandler
 from stat_arb.model.data_handler.yahoo_finance_data_handler import YahooFinanceDataHandler
+
+logger = logging.getLogger("stat_arb")
 
 
 class DataHandlerFactory:
@@ -10,8 +14,10 @@ class DataHandlerFactory:
     @staticmethod
     def create_data_handler(identifier: str, tickers, start_date, end_date) -> DataHandler:
         if identifier == DataHandlerEnum.YAHOO:
+            logger.info(f"Creating DataHandler type: {DataHandlerEnum.YAHOO.value}")
             return YahooFinanceDataHandler(tickers, start_date, end_date)
         elif identifier == DataHandlerEnum.SIMULATED:
+            logger.info(f"Creating DataHandler type: {DataHandlerEnum.SIMULATED.value}")
             return SimulatedDataHandler(tickers, start_date, end_date)
         else:
             raise ValueError(f"Unknown data handler identifier: {identifier}")
