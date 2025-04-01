@@ -10,6 +10,8 @@ logger = logging.getLogger("stat_arb")
 
 
 class StatisticalTests:
+    def run(self): ...
+
     def regress_timeseries_rolling(
         self, b: np.ndarray, A: np.ndarray, with_constant: bool = True, window: int = 252
     ):
@@ -39,7 +41,8 @@ class StatisticalTests:
 
         return self.resids
 
-    def is_coint_residual_stationary(self, k_vars: int):
+    # TODO: possible refactoring to make it return cadf.summary() rather than a sole bool
+    def is_coint_residual_stationary(self, k_vars: int) -> bool:
         """
         Cointegrated Engler Granger test to verify stationarity of (cointegrated) timeseries
 
@@ -48,3 +51,5 @@ class StatisticalTests:
         """
 
         cadf: CADF_Results = CADF.test_stationarity(self.get_residuals())
+
+        return cadf.significant_at_five_pct()

@@ -1,9 +1,9 @@
 import logging
 
-from stat_arb.model.data_handler import DataHandler
-from stat_arb.model.data_handler.data_handler_enum import DataHandlerEnum
-from stat_arb.model.data_handler.simulated_data_handler import SimulatedDataHandler
-from stat_arb.model.data_handler.yahoo_finance_data_handler import YahooFinanceDataHandler
+from stat_arb.model.data import DataHandler
+from stat_arb.model.data.data_handler_enum import DataHandlerEnum
+from stat_arb.model.data.simulated_data_handler import SimulatedDataHandler
+from stat_arb.model.data.yahoo_finance_data_handler import YahooFinanceDataHandler
 
 logger = logging.getLogger("stat_arb")
 

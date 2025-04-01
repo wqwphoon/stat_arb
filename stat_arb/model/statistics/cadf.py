@@ -26,6 +26,13 @@ class CADF_Results:
     def significant_at_ten_pct(self) -> bool:
         return (self.p_val < 0.1).item()
 
+    def summary(self) -> dict[str, float | list[float]]:
+        return {
+            "test_statistic": self.get_test_statistic(),
+            "p-value": self.get_p_value(),
+            "critical_values": self.get_critical_values(),
+        }
+
 
 class CADF:
     @staticmethod

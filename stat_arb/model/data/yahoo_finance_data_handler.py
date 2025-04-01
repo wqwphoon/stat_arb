@@ -4,7 +4,7 @@ from functools import wraps
 import pandas as pd
 import yfinance as yf
 
-from stat_arb.model.data_handler import DataHandler
+from stat_arb.model.data import DataHandler
 
 
 def lazy_load_data(func):

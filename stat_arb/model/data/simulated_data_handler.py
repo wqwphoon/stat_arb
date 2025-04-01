@@ -3,7 +3,7 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 
-from stat_arb.model.data_handler import DataHandler
+from stat_arb.model.data import DataHandler
 
 
 class SimulatedDataHandler(DataHandler):

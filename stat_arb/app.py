@@ -2,7 +2,7 @@ import datetime as dt
 import logging
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
-from stat_arb.model.data_handler import DataHandlerEnum
+from stat_arb.model.data import DataHandlerEnum
 
 # Configure the logger
 logger = logging.getLogger("stat_arb")

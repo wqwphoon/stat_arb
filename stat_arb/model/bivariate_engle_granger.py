@@ -1,6 +1,6 @@
 import datetime as dt
 
-from stat_arb.model.data_handler import DataHandlerEnum, DataHandlerFactory
+from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
 
 
 class BivariateEngleGranger:

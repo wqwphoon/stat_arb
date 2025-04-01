@@ -3,7 +3,7 @@ import datetime as dt
 import pandas as pd
 import pytest
 
-from stat_arb.model.data_handler.yahoo_finance_data_handler import YahooFinanceDataHandler
+from stat_arb.model.data.yahoo_finance_data_handler import YahooFinanceDataHandler
 
 START_2025 = "2025-01-01"
 DELTA_WEEK_2025 = "2025-01-08"
