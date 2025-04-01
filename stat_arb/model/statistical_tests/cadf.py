@@ -17,9 +17,19 @@ class CADF_Results:
     def get_critical_values(self) -> list[float]:
         return self.c_vals
 
+    def significant_at_one_pct(self) -> bool:
+        return (self.p_val < 0.01).item()
+
+    def significant_at_five_pct(self) -> bool:
+        return (self.p_val < 0.05).item()
+
+    def significant_at_ten_pct(self) -> bool:
+        return (self.p_val < 0.1).item()
+
 
 class CADF:
-    def test_stationarity(self, x, k_vars) -> CADF_Results:
+    @staticmethod
+    def test_stationarity(x, k_vars=1) -> CADF_Results:
         """
         Cointegrated Augmented Dickey Fuller stationarity test.
 
@@ -27,7 +37,7 @@ class CADF:
         ----------
         x : array-like
             - Timeseries to test for stationarity.
-        k_var : int
+        k_var : int, optional
             - Number of I(1) timeseries used to construct the cointegrated residual x.
         """
         n_obs = x.shape[0]
