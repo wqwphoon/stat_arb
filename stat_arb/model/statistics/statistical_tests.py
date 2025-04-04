@@ -9,7 +9,7 @@ logger = logging.getLogger("stat_arb")
 
 
 class StatisticalTests:
-    def __init__(self, x: np.array | pd.Series | pd.DataFrame, k_vars: int = 1):
+    def __init__(self, x: np.ndarray | pd.Series | pd.DataFrame, k_vars: int = 1):
         """
         x : array-like
             - Timeseries of residual.

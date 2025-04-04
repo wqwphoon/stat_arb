@@ -1,6 +1,7 @@
 import datetime as dt
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
+from stat_arb.model.statistics import Regressor, StatisticalTests
 
 
 class BivariateEngleGranger:
@@ -25,8 +26,17 @@ class BivariateEngleGranger:
             self.data_handler_enum, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
         )
 
-        data.get_close_prices()
-        data.get_normalised_close_prices()
+        normalised = data.get_normalised_close_prices()
+
+        regressor = Regressor()
+
+        resids = regressor.get_residuals(
+            normalised[self.ticker_a], normalised[self.ticker_b], with_constant=True
+        )
+
+        stats = StatisticalTests(resids, k_vars=2)
+
+        stationary = stats.is_coint_residual_stationary()
 
         pass
 

@@ -1,4 +1,5 @@
 import logging
+from typing import Sequence
 
 import numpy as np
 import statsmodels.api as sm
@@ -8,10 +9,12 @@ logger = logging.getLogger("stat_arb")
 
 
 class Regressor:
+    def __init__(self):
+        self.resids = None
 
-    def get_residuals(self):
+    def get_residuals(self, b: np.ndarray, A: np.ndarray, with_constant: bool = True) -> Sequence[float]:
         if not self.resids:
-            self.regress_timeseries_with_lookahead_bias()
+            self.regress_timeseries_with_lookahead_bias(b, A, with_constant)
 
         return self.resids
 
@@ -35,5 +38,5 @@ class Regressor:
 
         ols = sm.OLS(b, A).fit()
 
-        self.resids = ols.resids
+        self.resids = ols.resid
         self.params = ols.params

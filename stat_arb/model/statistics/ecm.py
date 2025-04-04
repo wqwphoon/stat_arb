@@ -3,6 +3,12 @@ from typing import Sequence
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from statsmodels.regression.linear_model import RegressionResultsWrapper
+
+
+class ECM_Results:
+    def __init__(self, ols_results: RegressionResultsWrapper):
+        self._ols = ols_results
 
 
 class ECM:
@@ -12,7 +18,7 @@ class ECM:
         price_y: Sequence[float],
         residual: Sequence[float],
         reverse_regression: bool = False,
-    ):
+    ) -> ECM_Results:
         """
         Check the Error Correction Model for a statistically significant long run equilibrium.
 
@@ -51,7 +57,7 @@ class ECM:
         # Regress
         ols = sm.OLS(lhs, rhs).fit()
 
-        pass
+        return ECM_Results(ols)
 
 
 if __name__ == "__main__":
