@@ -18,13 +18,13 @@ class CointegratedAugmentedDickeyFuller_Results:
         return self.c_vals
 
     def significant_at_one_pct(self) -> bool:
-        return (self.p_val < 0.01).item()
+        return bool(self.p_val < 0.01)
 
     def significant_at_five_pct(self) -> bool:
-        return (self.p_val < 0.05).item()
+        return bool(self.p_val < 0.05)
 
     def significant_at_ten_pct(self) -> bool:
-        return (self.p_val < 0.1).item()
+        return bool(self.p_val < 0.1)
 
     def summary(self) -> dict[str, float | list[float]]:
         return {
