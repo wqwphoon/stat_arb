@@ -2,7 +2,7 @@ from statsmodels.tsa.adfvalues import mackinnoncrit, mackinnonp
 from statsmodels.tsa.stattools import adfuller
 
 
-class CADF_Results:
+class CointegratedAugmentedDickeyFuller_Results:
     def __init__(self, test_statistic: float, p_value: float, criticial_values: list[float]):
         self.t_stat = test_statistic
         self.p_val = p_value
@@ -34,9 +34,9 @@ class CADF_Results:
         }
 
 
-class CADF:
+class CointegratedAugmentedDickeyFuller:
     @staticmethod
-    def test_stationarity(x, k_vars=1) -> CADF_Results:
+    def test_stationarity(x, k_vars=1) -> CointegratedAugmentedDickeyFuller_Results:
         """
         Cointegrated Augmented Dickey Fuller stationarity test.
 
@@ -56,4 +56,4 @@ class CADF:
         # TODO: flexibility to relax regression="c" HARDCODE
         p_val: float = mackinnonp(teststat=t_stat, regression="c", N=k_vars)
 
-        return CADF_Results(t_stat, p_val, c_vals)
+        return CointegratedAugmentedDickeyFuller_Results(t_stat, p_val, c_vals)

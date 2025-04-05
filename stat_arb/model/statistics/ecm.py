@@ -1,26 +1,42 @@
 from typing import Sequence
 
-import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.linear_model import RegressionResultsWrapper
 
+RESIDUAL_STR = "(Lag 1, Residuals)"
 
-class ECM_Results:
+
+class ErrorCorrectionModel_Results:
     def __init__(self, ols_results: RegressionResultsWrapper):
         self._ols = ols_results
 
+    def is_long_run_mean_reverting(self, alpha: float = 0.05) -> bool:
+        """
+        Check the Error Correction Model for a statistically significant long run equilibrium.
 
-class ECM:
+        Parameters
+        ----------
+        alpha : float, optional
+            - Default is 0.05.
+            - Significance level to test statistical significance of regressed residuals term.
+        """
+        return bool(self._ols.pvalues[RESIDUAL_STR] < alpha)
+
+    def get_long_run_reversion_speed(self) -> float:
+        return self._ols.params[RESIDUAL_STR]
+
+
+class ErrorCorrectionModel:
     @staticmethod
-    def check_long_run_equilibrium(
+    def fit(
         price_x: Sequence[float],
         price_y: Sequence[float],
         residual: Sequence[float],
         reverse_regression: bool = False,
-    ) -> ECM_Results:
+    ) -> ErrorCorrectionModel_Results:
         """
-        Check the Error Correction Model for a statistically significant long run equilibrium.
+        Fit the Error Correction Model.
 
         Parameters
         ----------
@@ -34,7 +50,7 @@ class ECM:
             - Regress security Y on security X i.e. plugging in the "wrong way" residuals.
         """
         ticker_x: str = getattr(price_x, "name", "X")
-        ticker_y: str = getattr(price_x, "name", "Y")
+        ticker_y: str = getattr(price_y, "name", "Y")
 
         # Concatenate series then difference / lag as required
         rhs = pd.concat([price_x, price_y, residual], axis=1)
@@ -42,7 +58,7 @@ class ECM:
 
         rhs[f"Δ{ticker_x}"] = rhs[ticker_x].diff()
         rhs[f"Δ{ticker_y}"] = rhs[ticker_y].diff()
-        rhs["(Lag 1, Residuals)"] = rhs["Residuals"].shift(1)
+        rhs[RESIDUAL_STR] = rhs["Residuals"].shift(1)
 
         rhs.dropna(inplace=True)
 
@@ -57,14 +73,4 @@ class ECM:
         # Regress
         ols = sm.OLS(lhs, rhs).fit()
 
-        return ECM_Results(ols)
-
-
-if __name__ == "__main__":
-    x = np.random.random_integers(-3, 10, size=(10, 1)).cumsum()
-    y = np.random.random_integers(-3, 10, size=(10, 1)).cumsum()
-    res = np.random.normal(size=(10, 1))
-
-    ecm = ECM.check_long_run_equilibrium(x, y, res)
-
-    pass
+        return ErrorCorrectionModel_Results(ols)

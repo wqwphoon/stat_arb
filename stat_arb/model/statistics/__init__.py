@@ -1,4 +1,11 @@
+from .cadf import CointegratedAugmentedDickeyFuller, CointegratedAugmentedDickeyFuller_Results
+from .ecm import ErrorCorrectionModel, ErrorCorrectionModel_Results
 from .regressor import Regressor
-from .statistical_tests import StatisticalTests
 
-__all__ = ["Regressor", "StatisticalTests"]
+__all__ = [
+    "Regressor",
+    "CointegratedAugmentedDickeyFuller",
+    "CointegratedAugmentedDickeyFuller_Results",
+    "ErrorCorrectionModel",
+    "ErrorCorrectionModel_Results",
+]

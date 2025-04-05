@@ -1,7 +1,13 @@
 import datetime as dt
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
-from stat_arb.model.statistics import Regressor, StatisticalTests
+from stat_arb.model.statistics import (
+    CointegratedAugmentedDickeyFuller,
+    CointegratedAugmentedDickeyFuller_Results,
+    ErrorCorrectionModel,
+    ErrorCorrectionModel_Results,
+    Regressor,
+)
 
 
 class BivariateEngleGranger:
@@ -34,9 +40,15 @@ class BivariateEngleGranger:
             normalised[self.ticker_a], normalised[self.ticker_b], with_constant=True
         )
 
-        stats = StatisticalTests(resids, k_vars=2)
+        stationary: CointegratedAugmentedDickeyFuller_Results = (
+            CointegratedAugmentedDickeyFuller.test_stationarity(resids, k_vars=2)
+        )
 
-        stationary = stats.is_coint_residual_stationary()
+        ecm: ErrorCorrectionModel_Results = ErrorCorrectionModel.fit(
+            normalised[self.ticker_a], normalised[self.ticker_b], resids
+        )
+
+        long_run = ecm.is_long_run_mean_reverting()
 
         pass
 
