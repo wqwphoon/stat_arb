@@ -8,6 +8,7 @@ from statsmodels.regression.rolling import RollingOLS
 logger = logging.getLogger("stat_arb")
 
 
+# TODO: Add Kalman filter and make an ABC for regressor type?
 class Regressor:
     def __init__(self):
         self.resids = None
