@@ -8,6 +8,7 @@ from stat_arb.model.statistics import (
     ErrorCorrectionModel_Results,
     Regressor,
 )
+from stat_arb.model.trading_strategy import OrnsteinUhlenbeckSDE, OrnsteinUhlenbeckSDE_Results
 
 
 class BivariateEngleGranger:
@@ -49,6 +50,8 @@ class BivariateEngleGranger:
         )
 
         long_run = ecm.is_long_run_mean_reverting()
+
+        ou: OrnsteinUhlenbeckSDE_Results = OrnsteinUhlenbeckSDE(resids).fit_to_sde()
 
         pass
 
