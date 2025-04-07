@@ -1,8 +1,6 @@
-import datetime as dt
 import logging
 
-from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
-from stat_arb.model.data import DataHandlerEnum
+from app.app import app_main
 
 # Configure the logger
 logger = logging.getLogger("stat_arb")
@@ -32,18 +30,8 @@ if not logger.handlers:
 def main():
     logger.info("Start Stat Arb app...")
 
-    ticker_a = "MA"
-    ticker_b = "V"
-    start = dt.datetime(2020, 1, 1)
-    end = dt.datetime(2025, 1, 8)
-    live = dt.datetime(2025, 1, 6)
-    data_enum = DataHandlerEnum.SIMULATED
-    model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, data_enum)
-    model.run()
-
-    pass
+    app_main()
 
 
 if __name__ == "__main__":
     main()
-    pass
