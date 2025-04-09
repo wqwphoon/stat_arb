@@ -1,6 +1,6 @@
 import logging
 
-from app.app import app_main
+from stat_arb.app import app_main
 
 # Configure the logger
 logger = logging.getLogger("stat_arb")
