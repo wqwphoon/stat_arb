@@ -7,6 +7,7 @@ from dash import Dash, Input, Output, callback, dash_table, dcc, html
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data import DataHandlerEnum
+from stat_arb.view.layout import layout
 
 logger = logging.getLogger("stat_arb")
 
@@ -16,25 +17,15 @@ def app_main():
 
     app = Dash()
 
-    app.layout = html.Div(
-        [
-            dcc.DatePickerRange(
-                id="date-picker-range",
-                min_date_allowed=dt.date(2000, 1, 1),
-                max_date_allowed=dt.date.today() - dt.timedelta(1),
-            ),
-            dcc.Dropdown(["^SPX", "AMZN"], id="ticker-a"),
-            dcc.Dropdown(["^SPX", "AMZN"], id="ticker-b"),
-            html.Div(id="test"),
-        ]
-    )
+    app.layout = layout()
 
-    @callback(
-        Output(component_id="test", component_property="children"),
-        Input(component_id="ticker-a", component_property="value"),
-    )
-    def update_test(value):
-        return f"selected {value}"
+    # @callback(
+    #     Output(component_id="test", component_property="children"),
+    #     Input(component_id="ticker-a", component_property="value"),
+    #     Input(component_id="ticker-b", component_property="value"),
+    # )
+    # def update_test(value_a, value_b):
+    #     return f"selected {value_a} and secondly {value_b}"
 
     # df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv")
 

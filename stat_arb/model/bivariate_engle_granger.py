@@ -59,7 +59,7 @@ class BivariateEngleGranger:
 if __name__ == "__main__":
     ticker_a = "MA"
     ticker_b = "V"
-    start = dt.datetime(2025, 1, 1)
+    start = dt.datetime(2020, 1, 1)
     end = dt.datetime(2025, 1, 8)
     live = dt.datetime(2025, 1, 6)
     data_enum = DataHandlerEnum.SIMULATED
