@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class DataHandlerEnum(Enum):
+class DataHandlerEnum(StrEnum):
     YAHOO = "Yahoo"
     SIMULATED = "Simulated"
 

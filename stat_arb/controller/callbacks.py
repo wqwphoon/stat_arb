@@ -11,7 +11,11 @@ logging.getLogger("stat_arb")
 
 
 def get_datasource_enums():
-    return [e.value for e in DataHandlerEnum]
+    return [e for e in DataHandlerEnum]
+
+
+def get_default_datasource_enum():
+    return DataHandlerEnum.SIMULATED
 
 
 @callback(
