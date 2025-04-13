@@ -7,4 +7,6 @@ class IDS:
         TEST_TRAIN_SPLIT = "test-train-split"
 
     class GRAPHS:
+        TICKER_A_PX_SERIES = "ticker-a-price-series"
+        TICKER_B_PX_SERIES = "ticker-b-price-series"
         RESIDUAL = "residual"

@@ -1,3 +1,34 @@
+import logging
+
+import plotly.express as px
 from dash import Input, Output, callback
 
+from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
+from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
 from stat_arb.view.ids import IDS
+
+logging.getLogger("stat_arb")
+
+
+def get_datasource_enums():
+    return [e.value for e in DataHandlerEnum]
+
+
+@callback(
+    Output(component_id=IDS.GRAPHS.TICKER_A_PX_SERIES, component_property="figure"),
+    Input(component_id=IDS.INPUTS.DATE_RANGE, component_property="start_date"),
+    Input(component_id=IDS.INPUTS.DATE_RANGE, component_property="end_date"),
+    Input(component_id=IDS.INPUTS.TICKER_A, component_property="value"),
+    Input(component_id=IDS.INPUTS.TICKER_B, component_property="value"),
+    Input(component_id=IDS.INPUTS.DATA_SOURCE, component_property="value"),
+    Input(component_id=IDS.INPUTS.TEST_TRAIN_SPLIT, component_property="value"),
+)
+def generate_model_from_setup(start_date, end_date, ticker_a, ticker_b, data_source, test_train_split):
+    logging.info("test")
+
+    enum: DataHandlerEnum = get_enum_from_str(data_source)
+
+    # TODO: fix for test train split start date
+    model = BivariateEngleGranger(ticker_a, ticker_b, start_date, end_date, start_date, enum)
+
+    return px.line(model.get_data()[ticker_a])

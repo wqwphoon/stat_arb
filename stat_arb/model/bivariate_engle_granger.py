@@ -55,6 +55,13 @@ class BivariateEngleGranger:
 
         pass
 
+    def get_data(self):
+        data = DataHandlerFactory.create_data_handler(
+            self.data_handler_enum, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
+        )
+
+        return data.get_close_prices()
+
 
 if __name__ == "__main__":
     ticker_a = "MA"
