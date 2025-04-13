@@ -1,7 +1,7 @@
 import logging
 
 import plotly.express as px
-from dash import Input, Output, callback
+from dash import Input, Output, callback, exceptions
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
@@ -19,7 +19,7 @@ def get_default_datasource_enum():
 
 
 @callback(
-    Output(component_id=IDS.GRAPHS.TICKER_A_PX_SERIES, component_property="figure"),
+    Output(component_id=IDS.GRAPHS.PRICE_SERIES, component_property="figure"),
     Input(component_id=IDS.INPUTS.DATE_RANGE, component_property="start_date"),
     Input(component_id=IDS.INPUTS.DATE_RANGE, component_property="end_date"),
     Input(component_id=IDS.INPUTS.TICKER_A, component_property="value"),
@@ -28,11 +28,12 @@ def get_default_datasource_enum():
     Input(component_id=IDS.INPUTS.TEST_TRAIN_SPLIT, component_property="value"),
 )
 def generate_model_from_setup(start_date, end_date, ticker_a, ticker_b, data_source, test_train_split):
-    logging.info("test")
+    if None in [start_date, end_date, ticker_a, ticker_b, data_source, test_train_split]:
+        exceptions.PreventUpdate
 
     enum: DataHandlerEnum = get_enum_from_str(data_source)
 
-    # TODO: fix for test train split start date
     model = BivariateEngleGranger(ticker_a, ticker_b, start_date, end_date, start_date, enum)
+    # TODO: fix for test train split start date
 
-    return px.line(model.get_data()[ticker_a])
+    return px.line(model.get_data())

@@ -60,7 +60,12 @@ class BivariateEngleGranger:
             self.data_handler_enum, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
         )
 
-        return data.get_close_prices()
+        self.close_prices = data.get_close_prices()
+
+        return self.close_prices
+
+    def get_residual(self):
+        return Regressor().get_residuals(self.close_prices[self.ticker_a], self.close_prices[self.ticker_b])
 
 
 if __name__ == "__main__":

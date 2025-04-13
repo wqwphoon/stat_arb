@@ -6,7 +6,12 @@ class IDS:
         DATA_SOURCE = "data-source"
         TEST_TRAIN_SPLIT = "test-train-split"
 
+    class STORES:
+        RESIDUAL = "raw_residual"
+
+    class REGRESSION:
+        TYPE = "regression-type"
+
     class GRAPHS:
-        TICKER_A_PX_SERIES = "ticker-a-price-series"
-        TICKER_B_PX_SERIES = "ticker-b-price-series"
-        RESIDUAL = "residual"
+        PRICE_SERIES = "price-series"
+        RESIDUAL = "plot_residual"
