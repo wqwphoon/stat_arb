@@ -7,7 +7,7 @@ class IDS:
         TEST_TRAIN_SPLIT = "test-train-split"
 
     class STORES:
-        RESIDUAL = "raw_residual"
+        SESSION_ID = "session-id"
 
     class REGRESSION:
         TYPE = "regression-type"
