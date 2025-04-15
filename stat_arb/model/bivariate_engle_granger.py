@@ -1,4 +1,5 @@
 import datetime as dt
+from typing import Sequence
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
 from stat_arb.model.statistics import (
@@ -64,8 +65,23 @@ class BivariateEngleGranger:
 
         return self.close_prices
 
-    def get_residual(self):
-        return Regressor().get_residuals(self.close_prices[self.ticker_a], self.close_prices[self.ticker_b])
+    def get_residual(self) -> Sequence[float]:
+        self.resids = Regressor().get_residuals(
+            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
+        )
+
+        return self.resids
+
+    def test_cadf(self) -> bool:
+        cadf = CointegratedAugmentedDickeyFuller.test_stationarity(self.resids, k_vars=2)
+        return cadf.significant_at_five_pct()
+
+    def test_ecm(self) -> bool:
+        ecm = ErrorCorrectionModel.fit(
+            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b], self.resids
+        )
+
+        return ecm.is_long_run_mean_reverting()
 
 
 if __name__ == "__main__":
