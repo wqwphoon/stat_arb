@@ -28,5 +28,7 @@ def layout():
             dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
             dcc.Dropdown(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
             dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
+            html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),
+            html.Div(id=IDS.STATISTICS.ADF_RESULT),
         ]
     )

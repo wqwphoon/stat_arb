@@ -80,7 +80,6 @@ class BivariateEngleGranger:
         ecm = ErrorCorrectionModel.fit(
             self.close_prices[self.ticker_a], self.close_prices[self.ticker_b], self.resids
         )
-
         return ecm.is_long_run_mean_reverting()
 
 

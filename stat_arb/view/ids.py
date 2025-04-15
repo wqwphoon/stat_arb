@@ -12,6 +12,9 @@ class IDS:
     class REGRESSION:
         TYPE = "regression-type"
 
+    class STATISTICS:
+        ADF_RESULT = "adf-result"
+
     class GRAPHS:
         PRICE_SERIES = "price-series"
         RESIDUAL = "plot_residual"

@@ -42,3 +42,11 @@ def generate_model_from_setup(start_date, end_date, ticker_a, ticker_b, data_sou
     SINGLE_USER_INSTANCE[MODEL] = model
 
     return px.line(model.get_data())
+
+
+@callback(Output(IDS.STATISTICS.ADF_RESULT, "children"), Input(IDS.GRAPHS.RESIDUAL, "figure"))
+def get_adf_result(_):
+    model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
+    cadf_result: bool = model.test_cadf()
+
+    return "Stationary at 5% significance level" if cadf_result else "Not stationary at 5% significance level"
