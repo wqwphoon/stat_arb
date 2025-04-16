@@ -50,3 +50,15 @@ def get_adf_result(_):
     cadf_result: bool = model.test_cadf()
 
     return "Stationary at 5% significance level" if cadf_result else "Not stationary at 5% significance level"
+
+
+@callback(Output(IDS.STATISTICS.ECM_RESULT, "children"), Input(IDS.GRAPHS.RESIDUAL, "figure"))
+def get_ecm_result(_):
+    model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
+    ecm_result: bool = model.test_ecm()
+
+    return (
+        "Long run mean reversion at 5% significance level"
+        if ecm_result
+        else "Absent of long run mean reversion at 5% significance level"
+    )

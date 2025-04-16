@@ -14,6 +14,7 @@ class IDS:
 
     class STATISTICS:
         ADF_RESULT = "adf-result"
+        ECM_RESULT = "ecm-result"
 
     class GRAPHS:
         PRICE_SERIES = "price-series"

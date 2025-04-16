@@ -30,5 +30,6 @@ def layout():
             dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
             html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),
             html.Div(id=IDS.STATISTICS.ADF_RESULT),
+            html.Div(id=IDS.STATISTICS.ECM_RESULT),
         ]
     )
