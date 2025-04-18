@@ -3,16 +3,16 @@ import datetime as dt
 import numpy as np
 import pandas as pd
 
-from stat_arb.model.data import DataHandler
+from stat_arb.model.data import BaseDataHandler
 
 
-class SimulatedDataHandler(DataHandler):
+class SimulatedDataHandler(BaseDataHandler):
     def __init__(
         self,
         tickers: list[str] | str,
         start_date: dt.datetime | str,
         end_date: dt.datetime | str,
-        corr: float = 0.2,
+        corr: float = 0.7,
     ):
         # Perform validation of input parameters
         if not tickers:

@@ -5,6 +5,7 @@ from dash import Input, Output, callback, exceptions
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
+from stat_arb.model.defaults import get_tickers
 from stat_arb.view.ids import IDS
 
 logging.getLogger("stat_arb")
@@ -19,6 +20,16 @@ def get_datasource_enums():
 
 def get_default_datasource_enum():
     return DataHandlerEnum.SIMULATED
+
+
+@callback(
+    Output(IDS.INPUTS.TICKER_A, "options"),
+    Output(IDS.INPUTS.TICKER_B, "options"),
+    Input(IDS.INPUTS.DATA_SOURCE, "value"),
+)
+def get_default_tickers(data_source_enum: DataHandlerEnum):
+    tickers = get_tickers(data_source_enum)
+    return tickers, tickers
 
 
 @callback(

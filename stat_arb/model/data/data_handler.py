@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 
 
-class DataHandler(ABC):
+class BaseDataHandler(ABC):
     """Interface to define DataHandler contract."""
 
     @abstractmethod

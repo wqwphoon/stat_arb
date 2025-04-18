@@ -10,6 +10,11 @@ def layout():
 
     return html.Div(
         [
+            dcc.Dropdown(
+                callbacks.get_datasource_enums(),
+                id=IDS.INPUTS.DATA_SOURCE,
+                value=callbacks.get_default_datasource_enum(),
+            ),
             dcc.DatePickerRange(
                 id=IDS.INPUTS.DATE_RANGE,
                 min_date_allowed=dt.date(2000, 1, 1),
@@ -19,17 +24,13 @@ def layout():
             ),
             dcc.Dropdown(["^SPX", "AMZN"], id=IDS.INPUTS.TICKER_A, value="^SPX"),
             dcc.Dropdown(["^SPX", "AMZN"], id=IDS.INPUTS.TICKER_B, value="AMZN"),
-            dcc.Dropdown(
-                callbacks.get_datasource_enums(),
-                id=IDS.INPUTS.DATA_SOURCE,
-                value=callbacks.get_default_datasource_enum(),
-            ),
             dcc.Slider(0, 1, 0.1, id=IDS.INPUTS.TEST_TRAIN_SPLIT),
             dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
             dcc.Dropdown(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
             dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
             html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),
             html.Div(id=IDS.STATISTICS.ADF_RESULT),
+            html.H4("Error Correction Model Result"),
             html.Div(id=IDS.STATISTICS.ECM_RESULT),
         ]
     )

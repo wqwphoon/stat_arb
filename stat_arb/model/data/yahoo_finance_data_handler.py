@@ -4,7 +4,7 @@ from functools import wraps
 import pandas as pd
 import yfinance as yf
 
-from stat_arb.model.data import DataHandler
+from stat_arb.model.data import BaseDataHandler
 
 
 def lazy_load_data(func):
@@ -19,7 +19,7 @@ def lazy_load_data(func):
     return wrapper
 
 
-class YahooFinanceDataHandler(DataHandler):
+class YahooFinanceDataHandler(BaseDataHandler):
     def __init__(self, tickers: list[str] | str, start_date: dt.datetime | str, end_date: dt.datetime | str):
         # Perform validation of input parameters
         if not tickers:

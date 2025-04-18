@@ -4,6 +4,7 @@ from enum import StrEnum
 class DataHandlerEnum(StrEnum):
     YAHOO = "Yahoo"
     SIMULATED = "Simulated"
+    LOCAL = "Local"
 
 
 def get_enum_from_str(x: str) -> DataHandlerEnum:
