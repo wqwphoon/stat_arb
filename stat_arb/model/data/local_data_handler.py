@@ -1,6 +1,3 @@
-import pandas as pd
-import yfinance as yf
-
 from stat_arb.model.data.data_handler import BaseDataHandler
 
 

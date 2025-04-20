@@ -5,7 +5,7 @@ from dash import Input, Output, callback, exceptions
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
-from stat_arb.model.defaults.defaults import get_tickers
+from stat_arb.model.local_store.ticker_snapshot.ticker_snapshot import get_tickers
 from stat_arb.view.ids import IDS
 
 logging.getLogger("stat_arb")

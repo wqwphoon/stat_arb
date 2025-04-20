@@ -31,14 +31,14 @@ def get_local_sp500_tickers() -> list[str]:
     return data["tickers"]
 
 
-def get_latest_file():
+def get_latest_file() -> Path:
     dir = Path(__file__).parent
     files = list(dir.glob(FILE_PREFIX + "*.yaml"))
 
     return max(files, key=extract_date)
 
 
-def extract_date(path: Path):
+def extract_date(path: Path) -> dt.datetime:
     date_str = path.stem.split("_")[-1]
     return dt.datetime.strptime(date_str, "%Y%m%d")
 
@@ -57,4 +57,3 @@ def update_local_sp500_tickers() -> None:
 if __name__ == "__main__":
     if False:
         update_local_sp500_tickers()
-    pass
