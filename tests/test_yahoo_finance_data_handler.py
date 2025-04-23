@@ -2,11 +2,17 @@ import datetime as dt
 
 import pandas as pd
 import pytest
+import yfinance as yf
 
 from stat_arb.model.data.yahoo_finance_data_handler import YahooFinanceDataHandler
 
 START_2025 = "2025-01-01"
 DELTA_WEEK_2025 = "2025-01-08"
+
+
+def test_yfinance_columns():
+    data = yf.download("^SPX", START_2025, DELTA_WEEK_2025, multi_level_index=False)
+    assert data.columns.to_list() == ["Close", "High", "Low", "Open", "Volume"]
 
 
 def test_empty_ticker_list():
