@@ -7,7 +7,8 @@ import yfinance as yf
 
 from stat_arb.model.local_store.ticker_snapshot.ticker_snapshot import get_sp500_tickers
 
-logging.getLogger("stat_arb")
+logger = logging.getLogger("stat_arb")
+
 
 db = "yfinance_analytics.db"
 
@@ -15,7 +16,7 @@ db = "yfinance_analytics.db"
 def store_yfinance_data(tickers: Collection[str], dt_start: dt.datetime, dt_end: dt.datetime):
     """Streaming response to store each ticker data individually"""
     conn = sqlite3.connect(db)
-    logging.INFO(f"Connected to database: {db}")
+    logger.info(f"Connected to database: {db}")
 
     n = len(tickers)
 
@@ -24,7 +25,7 @@ def store_yfinance_data(tickers: Collection[str], dt_start: dt.datetime, dt_end:
             tickers=tickers[i], start=dt_start, end=dt_end, multi_level_index=False, progress=False
         )
         df.to_sql(tickers[i], conn, if_exists="replace")
-        logging.INFO(f"Processing ticker {int(i+1)} out of {int(n)} : {tickers[i]}")
+        logger.info(f"Processing ticker {int(i+1)} out of {int(n)} : {tickers[i]}")
 
     conn.close()
 
