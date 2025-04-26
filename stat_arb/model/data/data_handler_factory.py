@@ -2,6 +2,7 @@ import logging
 
 from stat_arb.model.data import BaseDataHandler
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum
+from stat_arb.model.data.local_data_handler import LocalDataHandler
 from stat_arb.model.data.simulated_data_handler import SimulatedDataHandler
 from stat_arb.model.data.yahoo_finance_data_handler import YahooFinanceDataHandler
 
@@ -19,5 +20,8 @@ class DataHandlerFactory:
         elif identifier == DataHandlerEnum.SIMULATED:
             logger.info(f"Creating DataHandler type: {DataHandlerEnum.SIMULATED.value}")
             return SimulatedDataHandler(tickers, start_date, end_date)
+        elif identifier == DataHandlerEnum.LOCAL:
+            logger.info(f"Creating DataHandler type: {DataHandlerEnum.LOCAL.value}")
+            return LocalDataHandler(tickers, start_date, end_date)
         else:
             raise ValueError(f"Unknown data handler identifier: {identifier}")
