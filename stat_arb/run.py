@@ -1,7 +1,6 @@
 import logging
 
 from stat_arb.app import app_main
-from stat_arb.model.local_store.yfinance_cache.yfinance_cache import store_sp500_data
 
 # Configure the logger
 logger = logging.getLogger("stat_arb")
@@ -31,11 +30,7 @@ if not logger.handlers:
 def main():
     logger.info("Start Stat Arb app...")
 
-    # app_main()
-
-    dt_start = "2000-01-01"
-    dt_end = "2025-03-31"
-    store_sp500_data(dt_start, dt_end)
+    app_main()
 
 
 if __name__ == "__main__":
