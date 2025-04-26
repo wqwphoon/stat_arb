@@ -29,7 +29,7 @@ class LocalDataHandler(BaseDataHandler):
 
         conn = sqlite3.connect(db)
 
-        dfs = {}
+        dfs = []
         for ticker in self.tickers:
             df: pd.DataFrame = pd.read_sql_query(
                 f"""SELECT * FROM {ticker} WHERE
@@ -41,14 +41,24 @@ class LocalDataHandler(BaseDataHandler):
 
             df.set_index("Date", inplace=True)
 
-            dfs[ticker] = df
+            df.columns = [f"{ticker} | {x}" for x in df.columns]
 
-            pass
+            dfs.append(df)
 
         conn.close()
 
+        df = pd.concat(dfs, axis=1, join="outer")
+
+        # clean gaps in timeseries with ffill
+        df.ffill(inplace=True)
+
+        close_cols = [f"{x} | Close" for x in self.tickers]
+
+        return df[close_cols]
+
     def get_normalised_close_prices(self) -> pd.DataFrame:
-        pass
+        df = self.get_close_prices()
+        return df.div(df.iloc[0], axis=1)
 
 
 if __name__ == "__main__":
@@ -59,3 +69,5 @@ if __name__ == "__main__":
 
     data = LocalDataHandler(tickers, start, end)
     data.get_close_prices()
+    data.get_normalised_close_prices()
+    pass
