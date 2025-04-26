@@ -52,6 +52,8 @@ class LocalDataHandler(BaseDataHandler):
         # clean gaps in timeseries with ffill
         df.ffill(inplace=True)
 
+        df.index = [pd.to_datetime(date) for date in df.index]
+
         close_cols = [f"{x} | Close" for x in self.tickers]
 
         return df[close_cols]
