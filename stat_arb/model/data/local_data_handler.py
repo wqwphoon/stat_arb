@@ -56,7 +56,11 @@ class LocalDataHandler(BaseDataHandler):
 
         close_cols = [f"{x} | Close" for x in self.tickers]
 
-        return df[close_cols]
+        df = df[close_cols]
+
+        df.columns = self.tickers
+
+        return df
 
     def get_normalised_close_prices(self) -> pd.DataFrame:
         df = self.get_close_prices()
