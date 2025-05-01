@@ -1,5 +1,6 @@
 import datetime as dt
 from typing import Sequence
+from urllib.request import DataHandler
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
 from stat_arb.model.statistics import (
@@ -56,14 +57,26 @@ class BivariateEngleGranger:
 
         pass
 
-    def get_data(self):
-        data = DataHandlerFactory.create_data_handler(
+    def data_init(self) -> None:
+        self.data_handler = DataHandlerFactory.create_data_handler(
             self.data_handler_enum, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
         )
 
-        self.close_prices = data.get_close_prices()
+    def get_close_prices(self):
+        if not getattr(self, "data_handler", None):
+            self.data_init()
+
+        self.close_prices = self.data_handler.get_close_prices()
 
         return self.close_prices
+
+    def get_normalised_close_prices(self):
+        if not getattr(self, "data_handler", None):
+            self.data_init()
+
+        self.normalised_close_prices = self.data_handler.get_normalised_close_prices()
+
+        return self.normalised_close_prices
 
     def get_residual(self) -> Sequence[float]:
         self.resids = Regressor().get_residuals(

@@ -52,7 +52,7 @@ def generate_model_from_setup(start_date, end_date, ticker_a, ticker_b, data_sou
 
     SINGLE_USER_INSTANCE[MODEL] = model
 
-    return px.line(model.get_data())
+    return px.line(model.get_close_prices())
 
 
 @callback(Output(IDS.STATISTICS.ADF_RESULT, "children"), Input(IDS.GRAPHS.RESIDUAL, "figure"))
