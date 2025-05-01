@@ -32,7 +32,7 @@ class LocalDataHandler(BaseDataHandler):
         dfs = []
         for ticker in self.tickers:
             df: pd.DataFrame = pd.read_sql_query(
-                f"""SELECT * FROM {ticker} WHERE
+                f"""SELECT Date, Close FROM {ticker} WHERE
                 (Date >= '{self.start_date.strftime("%Y-%m-%d")}') AND
                 (Date <= '{self.end_date.strftime("%Y-%m-%d")}')
                 """,
@@ -40,8 +40,6 @@ class LocalDataHandler(BaseDataHandler):
             )
 
             df.set_index("Date", inplace=True)
-
-            df.columns = [f"{ticker} | {x}" for x in df.columns]
 
             dfs.append(df)
 
@@ -53,10 +51,6 @@ class LocalDataHandler(BaseDataHandler):
         df.ffill(inplace=True)
 
         df.index = [pd.to_datetime(date) for date in df.index]
-
-        close_cols = [f"{x} | Close" for x in self.tickers]
-
-        df = df[close_cols]
 
         df.columns = self.tickers
 
