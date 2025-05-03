@@ -1,7 +1,7 @@
 import logging
 
 import plotly.express as px
-from dash import Input, Output, callback, exceptions
+from dash import Input, Output, State, callback, exceptions
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
@@ -10,6 +10,8 @@ from stat_arb.view.ids import IDS
 
 logging.getLogger("stat_arb")
 
+# In-memory store for local development
+# Use dcc.Store and serializable data (rather than wrapper class) for multi-user production
 SINGLE_USER_INSTANCE = {}
 MODEL = "model"
 
@@ -23,9 +25,9 @@ def get_default_datasource_enum():
 
 
 @callback(
-    Output(IDS.INPUTS.TICKER_A, "options"),
-    Output(IDS.INPUTS.TICKER_B, "options"),
-    Input(IDS.INPUTS.DATA_SOURCE, "value"),
+    Output(IDS.STORE_INPUTS.TICKER_A, "options"),
+    Output(IDS.STORE_INPUTS.TICKER_B, "options"),
+    Input(IDS.STORE_INPUTS.DATA_SOURCE, "value"),
 )
 def get_default_tickers(data_source_enum: DataHandlerEnum):
     tickers = get_tickers(data_source_enum)
@@ -34,14 +36,15 @@ def get_default_tickers(data_source_enum: DataHandlerEnum):
 
 @callback(
     Output(component_id=IDS.GRAPHS.PRICE_SERIES, component_property="figure"),
-    Input(component_id=IDS.INPUTS.DATE_RANGE, component_property="start_date"),
-    Input(component_id=IDS.INPUTS.DATE_RANGE, component_property="end_date"),
-    Input(component_id=IDS.INPUTS.TICKER_A, component_property="value"),
-    Input(component_id=IDS.INPUTS.TICKER_B, component_property="value"),
-    Input(component_id=IDS.INPUTS.DATA_SOURCE, component_property="value"),
-    Input(component_id=IDS.INPUTS.TEST_TRAIN_SPLIT, component_property="value"),
+    Input(component_id=IDS.INPUTS.DATA_INPUT, component_property="n_clicks"),
+    State(component_id=IDS.STORE_INPUTS.DATE_RANGE, component_property="start_date"),
+    State(component_id=IDS.STORE_INPUTS.DATE_RANGE, component_property="end_date"),
+    State(component_id=IDS.STORE_INPUTS.TICKER_A, component_property="value"),
+    State(component_id=IDS.STORE_INPUTS.TICKER_B, component_property="value"),
+    State(component_id=IDS.STORE_INPUTS.DATA_SOURCE, component_property="value"),
+    State(component_id=IDS.STORE_INPUTS.TEST_TRAIN_SPLIT, component_property="value"),
 )
-def generate_model_from_setup(start_date, end_date, ticker_a, ticker_b, data_source, test_train_split):
+def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, data_source, test_train_split):
     if None in [start_date, end_date, ticker_a, ticker_b, data_source, test_train_split]:
         exceptions.PreventUpdate
 

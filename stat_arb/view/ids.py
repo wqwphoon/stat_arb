@@ -1,13 +1,13 @@
 class IDS:
-    class INPUTS:
+    class STORE_INPUTS:
         DATE_RANGE = "date-range"
         TICKER_A = "ticker-a"
         TICKER_B = "ticker-b"
         DATA_SOURCE = "data-source"
         TEST_TRAIN_SPLIT = "test-train-split"
 
-    class STORES:
-        SESSION_ID = "session-id"
+    class INPUTS:
+        DATA_INPUT = "load-data"
 
     class REGRESSION:
         TYPE = "regression-type"
