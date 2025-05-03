@@ -18,7 +18,7 @@ def layout():
                         callbacks.get_datasource_enums(),
                         id=IDS.STORE_INPUTS.DATA_SOURCE,
                         value=callbacks.get_default_datasource_enum(),
-                        style={"width": "200px"},
+                        style={"width": "40%"},
                     ),
                 ]
             ),
@@ -51,6 +51,9 @@ def layout():
                     ),
                     html.Div(
                         [
+                            html.P(
+                                "Choose the start and end dates.",
+                            ),
                             dcc.DatePickerRange(
                                 id=IDS.STORE_INPUTS.DATE_RANGE,
                                 min_date_allowed=dt.date(2000, 1, 1),
@@ -61,20 +64,12 @@ def layout():
                         ],
                         style={"marginTop": "10px"},
                     ),
-                    html.Button("Load Data", id=IDS.INPUTS.DATA_INPUT, style={"marginTop": "10px"}),
+                    html.Button("Load Data", id=IDS.INPUTS.DATA_INPUT, style={"marginTop": "20px"}),
                 ]
             ),
-            # dcc.DatePickerRange(
-            #     id=IDS.INPUTS.DATE_RANGE,
-            #     min_date_allowed=dt.date(2000, 1, 1),
-            #     max_date_allowed=dt.date.today() - dt.timedelta(1),
-            #     start_date=dt.date(2023, 1, 1),
-            #     end_date=dt.date(2024, 12, 31),
-            # ),
-            # dcc.Dropdown([], id=IDS.INPUTS.TICKER_A),
-            # dcc.Dropdown([], id=IDS.INPUTS.TICKER_B),
+            dcc.Loading(children=[dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES)]),
             dcc.Slider(0, 1, 0.1, id=IDS.STORE_INPUTS.TEST_TRAIN_SPLIT),
-            dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
+            # dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
             dcc.Dropdown(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
             dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
             html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),

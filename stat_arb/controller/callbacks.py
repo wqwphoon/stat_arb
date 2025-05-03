@@ -1,7 +1,7 @@
 import logging
 
 import plotly.express as px
-from dash import Input, Output, State, callback, exceptions
+from dash import Input, Output, State, callback, dcc, exceptions
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
@@ -55,7 +55,9 @@ def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, da
 
     SINGLE_USER_INSTANCE[MODEL] = model
 
-    return px.line(model.get_close_prices())
+    fig = px.line(model.get_close_prices())
+
+    return fig
 
 
 @callback(Output(IDS.STATISTICS.ADF_RESULT, "children"), Input(IDS.GRAPHS.RESIDUAL, "figure"))
