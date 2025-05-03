@@ -1,7 +1,9 @@
 import logging
 
+import plotly
 import plotly.express as px
-from dash import Input, Output, State, callback, dcc, exceptions
+import plotly.subplots
+from dash import Input, Output, State, callback, exceptions
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
@@ -51,11 +53,19 @@ def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, da
     enum: DataHandlerEnum = get_enum_from_str(data_source)
 
     # TODO: fix for test train split start date
-    model = BivariateEngleGranger(ticker_a, ticker_b, start_date, end_date, start_date, enum)
+    model = BivariateEngleGranger(ticker_a, ticker_b, start_date, end_date, enum)
 
     SINGLE_USER_INSTANCE[MODEL] = model
 
-    fig = px.line(model.get_close_prices())
+    fig = plotly.subplots.make_subplots(rows=2, cols=1)
+
+    fig1 = px.line(model.get_close_prices(), y=[ticker_a, ticker_b], title="Raw Prices")
+    fig2 = px.line(model.get_normalised_close_prices(), y=[ticker_a, ticker_b], title="Normalised Prices")
+
+    fig.add_traces(fig1.data, rows=1, cols=1)
+    fig.add_traces(fig2.data, rows=2, cols=1)
+
+    fig.update_layout(title_text="Stock Prices")
 
     return fig
 

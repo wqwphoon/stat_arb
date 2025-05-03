@@ -67,7 +67,15 @@ def layout():
                     html.Button("Load Data", id=IDS.INPUTS.DATA_INPUT, style={"marginTop": "20px"}),
                 ]
             ),
-            dcc.Loading(children=[dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES)]),
+            dcc.Loading(
+                children=[
+                    dcc.Graph(
+                        id=IDS.GRAPHS.PRICE_SERIES,
+                        config={"responsive": True},
+                        style={"height": "100%", "width": "100%"},
+                    )
+                ]
+            ),
             dcc.Slider(0, 1, 0.1, id=IDS.STORE_INPUTS.TEST_TRAIN_SPLIT),
             # dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
             dcc.Dropdown(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
