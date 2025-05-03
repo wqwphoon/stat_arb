@@ -3,8 +3,8 @@ import sqlite3
 
 import pandas as pd
 
+from stat_arb.model.config import DB
 from stat_arb.model.data.data_handler import BaseDataHandler
-from stat_arb.model.local_store.yfinance_cache.yfinance_cache import db
 
 
 class LocalDataHandler(BaseDataHandler):
@@ -27,7 +27,7 @@ class LocalDataHandler(BaseDataHandler):
 
     def get_close_prices(self) -> pd.DataFrame:
 
-        conn = sqlite3.connect(db)
+        conn = sqlite3.connect(DB)
 
         dfs = []
         for ticker in self.tickers:

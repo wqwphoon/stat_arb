@@ -3,9 +3,9 @@ if __name__ == "__main__":
 
     import yfinance as yf
 
-    db = "yfinance_analytics.db"
+    from stat_arb.model.config import DB
 
-    conn = sqlite3.connect(db)
+    conn = sqlite3.connect(DB)
 
     c = conn.cursor()
 
