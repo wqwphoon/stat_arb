@@ -32,7 +32,7 @@ def parse_args() -> None:
 
     parser.add_argument("-d", "--database", action="store_true", help="Create ticker prices local database")
     parser.add_argument("-t", "--ticker", action="store_true", help="Create updated S&P500 ticker list")
-    parser.set_defaults(func=run)  # set dot notation for func
+    parser.set_defaults(func=run)  # set dot notation for func (attribute)
 
     namespace: Namespace = parser.parse_args()
     namespace.func(namespace)
