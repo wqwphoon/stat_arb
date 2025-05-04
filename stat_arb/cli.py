@@ -2,8 +2,8 @@ import logging
 from argparse import ArgumentParser, Namespace
 
 from stat_arb.app import main as app_main
-from stat_arb.db_run import main as db_main
 from stat_arb.model.local_store.ticker_snapshot.ticker_snapshot import main as ticker_main
+from stat_arb.model.local_store.yfinance_cache.db_run import main as db_main
 
 logger = logging.getLogger(__name__)
 
