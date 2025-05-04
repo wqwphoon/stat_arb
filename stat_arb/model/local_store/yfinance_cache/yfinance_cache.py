@@ -22,7 +22,7 @@ def store_yfinance_data(tickers: Collection[str], dt_start: dt.datetime, dt_end:
         df = yf.download(
             tickers=tickers[i], start=dt_start, end=dt_end, multi_level_index=False, progress=False
         )
-        # df.to_sql(tickers[i], conn, if_exists="replace")
+        df.to_sql(tickers[i], conn, if_exists="replace")
         logger.info(f"Processing ticker {int(i+1)} out of {int(n)} : {tickers[i]}")
 
     conn.close()

@@ -8,7 +8,3 @@ def main():
     dt_end = dt.date.today() - dt.timedelta(1)
 
     store_sp500_data(dt_start, dt_end)
-
-
-if __name__ == "__main__":
-    main()
