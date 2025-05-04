@@ -1,4 +1,5 @@
 import datetime as dt
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -6,9 +7,15 @@ import yaml
 
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum
 
+logger = logging.getLogger(__name__)
+
 SP500_CONSTITUENTS = r"https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 
 FILE_PREFIX = "sp500_tickers_"
+
+
+def main() -> None:
+    update_local_sp500_tickers()
 
 
 def get_tickers(enum: DataHandlerEnum) -> list[str]:
@@ -19,6 +26,7 @@ def get_tickers(enum: DataHandlerEnum) -> list[str]:
 
 
 def get_sp500_tickers() -> list[str]:
+    logger.info("Web scraping S&P500 tickers from wiki...")
     return pd.read_html(SP500_CONSTITUENTS)[0]["Symbol"].to_list()
 
 
@@ -26,6 +34,7 @@ def get_local_sp500_tickers() -> list[str]:
     latest_store = get_latest_file()
 
     with open(latest_store, "r") as f:
+        logger.info(f"Reading from file: {f.name}")
         data = yaml.safe_load(f)
 
     return data["tickers"]
@@ -51,9 +60,5 @@ def update_local_sp500_tickers() -> None:
 
     tickers = get_sp500_tickers()
     with open(path, "w") as f:
+        logger.info(f"Writing to file: {f.name}")
         yaml.dump({"tickers": tickers}, f)
-
-
-if __name__ == "__main__":
-    if False:
-        update_local_sp500_tickers()
