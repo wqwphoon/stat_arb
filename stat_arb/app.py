@@ -4,7 +4,7 @@ from dash import Dash
 
 from stat_arb.view.layout import layout
 
-logger = logging.getLogger("stat_arb")
+logger = logging.getLogger(__name__)
 
 
 def app_main():
