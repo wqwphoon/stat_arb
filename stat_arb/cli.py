@@ -12,7 +12,7 @@ def main() -> None:
     parse_args()
 
 
-def run(args) -> None:
+def run(args: Namespace) -> None:
     if args.database:
         logger.info("CLI Database flag detected...")
         db_main()
@@ -26,10 +26,12 @@ def run(args) -> None:
 
 
 def parse_args() -> None:
-    parser = ArgumentParser()
+    parser = ArgumentParser(
+        description="Pairs Trading Dashboard", epilog="Execute with no arguments for Pairs Trading Dashboard"
+    )
 
-    parser.add_argument("-d", "--database", action="store_true")
-    parser.add_argument("-t", "--ticker", action="store_true")
+    parser.add_argument("-d", "--database", action="store_true", help="Create ticker prices local database")
+    parser.add_argument("-t", "--ticker", action="store_true", help="Create updated S&P500 ticker list")
     parser.set_defaults(func=run)  # set dot notation for func
 
     namespace: Namespace = parser.parse_args()
