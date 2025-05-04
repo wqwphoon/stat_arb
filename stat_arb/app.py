@@ -7,7 +7,7 @@ from stat_arb.view.layout import layout
 logger = logging.getLogger(__name__)
 
 
-def app_main():
+def main():
     logger.info("Configuring Dash instance...")
 
     app = Dash()
