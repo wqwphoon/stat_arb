@@ -10,7 +10,7 @@ from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from
 from stat_arb.model.local_store.ticker_snapshot.ticker_snapshot import get_tickers
 from stat_arb.view.ids import IDS
 
-logging.getLogger("stat_arb")
+logger = logging.getLogger(__name__)
 
 # In-memory store for local development
 # Use dcc.Store and serializable data (rather than wrapper class) for multi-user production

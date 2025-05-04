@@ -6,7 +6,7 @@ from stat_arb.model.data.local_data_handler import LocalDataHandler
 from stat_arb.model.data.simulated_data_handler import SimulatedDataHandler
 from stat_arb.model.data.yahoo_finance_data_handler import YahooFinanceDataHandler
 
-logger = logging.getLogger("stat_arb")
+logger = logging.getLogger(__name__)
 
 
 class DataHandlerFactory:

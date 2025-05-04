@@ -5,7 +5,7 @@ import numpy as np
 import statsmodels.api as sm
 from statsmodels.regression.rolling import RollingOLS
 
-logger = logging.getLogger("stat_arb")
+logger = logging.getLogger(__name__)
 
 
 # TODO: Add Kalman filter and make an ABC for regressor type?

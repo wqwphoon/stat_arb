@@ -8,7 +8,7 @@ import yfinance as yf
 from stat_arb.model.config import DB
 from stat_arb.model.local_store.ticker_snapshot.ticker_snapshot import get_sp500_tickers
 
-logger = logging.getLogger("stat_arb")
+logger = logging.getLogger(__name__)
 
 
 def store_yfinance_data(tickers: Collection[str], dt_start: dt.datetime, dt_end: dt.datetime):
@@ -26,6 +26,7 @@ def store_yfinance_data(tickers: Collection[str], dt_start: dt.datetime, dt_end:
         logger.info(f"Processing ticker {int(i+1)} out of {int(n)} : {tickers[i]}")
 
     conn.close()
+    logger.info(f"Disconnected from database: {DB}")
 
 
 def store_sp500_data(dt_start: dt.datetime, dt_end: dt.datetime) -> None:
