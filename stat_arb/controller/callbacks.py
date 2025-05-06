@@ -63,7 +63,10 @@ def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, da
     fig2 = px.line(model.get_normalised_close_prices(), y=[ticker_a, ticker_b], title="Normalised Prices")
 
     fig.add_traces(fig1.data, rows=1, cols=1)
-    fig.add_traces(fig2.data, rows=2, cols=1)
+
+    for trace in fig2.data:
+        trace.showlegend = False
+        fig.add_traces(trace, rows=2, cols=1)
 
     fig.update_layout(title_text="Stock Prices")
 
