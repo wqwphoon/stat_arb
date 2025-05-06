@@ -1,10 +1,13 @@
 import datetime as dt
+import logging
 import sqlite3
 
 import pandas as pd
 
 from stat_arb.model.config import DB
 from stat_arb.model.data.data_handler import BaseDataHandler
+
+logger = logging.getLogger(__name__)
 
 
 class LocalDataHandler(BaseDataHandler):
@@ -26,8 +29,8 @@ class LocalDataHandler(BaseDataHandler):
         self.end_date = end_date
 
     def get_close_prices(self) -> pd.DataFrame:
-
         conn = sqlite3.connect(DB)
+        logger.info(f"Connected to database: {DB}")
 
         dfs = []
         for ticker in self.tickers:
@@ -39,11 +42,14 @@ class LocalDataHandler(BaseDataHandler):
                 conn,
             )
 
+            logger.info(f"Queried local database for ticker: {ticker}")
+
             df.set_index("Date", inplace=True)
 
             dfs.append(df)
 
         conn.close()
+        logger.info(f"Disconnected from database: {DB}")
 
         df = pd.concat(dfs, axis=1, join="outer")
 
