@@ -35,7 +35,7 @@ class LocalDataHandler(BaseDataHandler):
         dfs = []
         for ticker in self.tickers:
             df: pd.DataFrame = pd.read_sql_query(
-                f"""SELECT Date, Close FROM {ticker} WHERE
+                f"""SELECT Date, Close FROM '{ticker}' WHERE
                 (Date >= '{self.start_date.strftime("%Y-%m-%d")}') AND
                 (Date <= '{self.end_date.strftime("%Y-%m-%d")}')
                 """,
