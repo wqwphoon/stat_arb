@@ -53,7 +53,7 @@ def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, da
     enum: DataHandlerEnum = get_enum_from_str(data_source)
 
     # TODO: fix for test train split start date
-    model = BivariateEngleGranger(ticker_a, ticker_b, start_date, end_date, enum)
+    model = BivariateEngleGranger(ticker_a, ticker_b, start_date, end_date, start_date, enum)
 
     SINGLE_USER_INSTANCE[MODEL] = model
 
