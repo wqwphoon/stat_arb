@@ -78,11 +78,21 @@ def layout():
             ),
             dcc.Slider(0, 1, 0.1, id=IDS.STORE_INPUTS.TEST_TRAIN_SPLIT),
             # dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
-            dcc.Dropdown(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
-            dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
-            html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),
-            html.Div(id=IDS.STATISTICS.ADF_RESULT),
-            html.H4("Error Correction Model Result"),
-            html.Div(id=IDS.STATISTICS.ECM_RESULT),
+            html.Div(
+                [
+                    html.H3("Step 3: Select Regression Method"),
+                    dcc.RadioItems(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
+                    dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
+                ]
+            ),
+            html.Div(
+                [
+                    html.H3("Step 4: Review Statistical Tests"),
+                    html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),
+                    html.Div(id=IDS.STATISTICS.ADF_RESULT),
+                    html.H4("Error Correction Model Result"),
+                    html.Div(id=IDS.STATISTICS.ECM_RESULT),
+                ]
+            ),
         ]
     )
