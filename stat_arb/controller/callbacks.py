@@ -57,7 +57,7 @@ def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, da
 
     SINGLE_USER_INSTANCE[MODEL] = model
 
-    fig = plotly.subplots.make_subplots(rows=2, cols=1)
+    fig = plotly.subplots.make_subplots(rows=2, cols=1, subplot_titles=("Raw Prices", "Normalised Prices"))
 
     fig1 = px.line(model.get_close_prices(), y=[ticker_a, ticker_b], title="Raw Prices")
     fig2 = px.line(model.get_normalised_close_prices(), y=[ticker_a, ticker_b], title="Normalised Prices")
@@ -68,7 +68,7 @@ def generate_model_from_setup(load, start_date, end_date, ticker_a, ticker_b, da
         trace.showlegend = False
         fig.add_traces(trace, rows=2, cols=1)
 
-    fig.update_layout(title_text="Stock Prices")
+    fig.update_layout(title_text="Stock Prices", height=800)
 
     return fig
 
