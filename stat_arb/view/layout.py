@@ -1,5 +1,6 @@
 import datetime as dt
 
+import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 from stat_arb.controller import callbacks, regression_callbacks
@@ -88,10 +89,20 @@ def layout():
             html.Div(
                 [
                     html.H3("Step 4: Review Statistical Tests"),
-                    html.H4("Cointegrated Augmented Dickey-Fuller Test Result"),
-                    html.Div(id=IDS.STATISTICS.ADF_RESULT),
-                    html.H4("Error Correction Model Result"),
-                    html.Div(id=IDS.STATISTICS.ECM_RESULT),
+                    dbc.Toast(
+                        [
+                            html.Div(id=IDS.STATISTICS.ADF_RESULT),
+                        ],
+                        header="Cointegrated Augmented Dickey-Fuller Test Result",
+                        is_open=True,
+                    ),
+                    dbc.Toast(
+                        [
+                            html.Div(id=IDS.STATISTICS.ECM_RESULT),
+                        ],
+                        header="Error Correction Model Result",
+                        is_open=True,
+                    ),
                 ]
             ),
         ]
