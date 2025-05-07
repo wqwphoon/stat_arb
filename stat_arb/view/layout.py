@@ -11,7 +11,7 @@ def layout():
 
     return html.Div(
         [
-            html.H1("Pairs Trading Dashboard"),
+            html.H1("Pairs Trading Dashboard", style={"marginTop": "20px"}),
             html.Div(
                 [
                     html.H3("Step 1: Select Data Source"),
@@ -105,5 +105,6 @@ def layout():
                     ),
                 ]
             ),
-        ]
+        ],
+        style={"paddingLeft": "40px"},
     )
