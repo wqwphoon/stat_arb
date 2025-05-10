@@ -14,7 +14,7 @@ def layout():
             html.H1("Pairs Trading Dashboard", style={"marginTop": "20px"}),
             html.Div(
                 [
-                    html.H3("Step 1: Select Data Source"),
+                    html.H3("Step 1: Select Data Source", style={"marginTop": "20px"}),
                     dcc.Dropdown(
                         callbacks.get_datasource_enums(),
                         id=IDS.STORE_INPUTS.DATA_SOURCE,
@@ -25,7 +25,7 @@ def layout():
             ),
             html.Div(
                 [
-                    html.H3("Step 2: Select Stock Data"),
+                    html.H3("Step 2: Select Stock Data", style={"marginTop": "20px"}),
                     html.Div(
                         [
                             html.Div(
@@ -81,20 +81,21 @@ def layout():
             # dcc.Graph(id=IDS.GRAPHS.PRICE_SERIES),
             html.Div(
                 [
-                    html.H3("Step 3: Select Regression Method"),
+                    html.H3("Step 3: Select Regression Method", style={"marginTop": "20px"}),
                     dcc.RadioItems(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
                     dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
                 ]
             ),
             html.Div(
                 [
-                    html.H3("Step 4: Review Statistical Tests"),
+                    html.H3("Step 4: Review Statistical Tests", style={"marginTop": "20px"}),
                     dbc.Toast(
                         [
                             html.Div(id=IDS.STATISTICS.ADF_RESULT),
                         ],
                         header="Cointegrated Augmented Dickey-Fuller Test Result",
                         is_open=True,
+                        style={"marginTop": "20px"},
                     ),
                     dbc.Toast(
                         [
@@ -102,6 +103,7 @@ def layout():
                         ],
                         header="Error Correction Model Result",
                         is_open=True,
+                        style={"marginTop": "20px"},
                     ),
                 ]
             ),
