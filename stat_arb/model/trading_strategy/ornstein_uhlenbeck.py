@@ -6,7 +6,7 @@ from statsmodels.tsa.ar_model import AutoReg, AutoRegResultsWrapper
 
 class OrnsteinUhlenbeckSDE_Results:
     def __init__(self, mu, sigma, half_life):
-        """Immuatable"""
+        """Immutable"""
         self.__mu = mu
         self.__sigma = sigma
         self.__half_life_working_days = half_life
