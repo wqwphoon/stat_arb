@@ -1,6 +1,6 @@
 import datetime as dt
+import logging
 from typing import Sequence
-from urllib.request import DataHandler
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
 from stat_arb.model.statistics import (
@@ -11,6 +11,8 @@ from stat_arb.model.statistics import (
     Regressor,
 )
 from stat_arb.model.trading_strategy import OrnsteinUhlenbeckSDE, OrnsteinUhlenbeckSDE_Results
+
+logger = logging.getLogger(__name__)
 
 
 class BivariateEngleGranger:
