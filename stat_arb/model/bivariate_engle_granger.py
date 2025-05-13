@@ -45,7 +45,7 @@ class BivariateEngleGranger:
             normalised[self.ticker_a], normalised[self.ticker_b], with_constant=True
         )
 
-        stationary: CointegratedAugmentedDickeyFuller_Results = (
+        stationary: CointegratedAugmentedDickeyFuller_Results = (  # noqa: F841
             CointegratedAugmentedDickeyFuller.test_stationarity(resids, k_vars=2)
         )
 
@@ -53,9 +53,9 @@ class BivariateEngleGranger:
             normalised[self.ticker_a], normalised[self.ticker_b], resids
         )
 
-        long_run = ecm.is_long_run_mean_reverting()
+        long_run = ecm.is_long_run_mean_reverting()  # noqa: F841
 
-        ou: OrnsteinUhlenbeckSDE_Results = OrnsteinUhlenbeckSDE(resids).fit_to_sde()
+        ou: OrnsteinUhlenbeckSDE_Results = OrnsteinUhlenbeckSDE(resids).fit_to_sde()  # noqa: F841
 
         pass
 

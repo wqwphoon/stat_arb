@@ -9,9 +9,10 @@ if __name__ == "__main__":
 
     c = conn.cursor()
 
-    # data = yf.download("AMZN", "2024-01-01", "2025-01-01", multi_level_index=False)
+    if False:
+        data = yf.download("AMZN", "2024-01-01", "2025-01-01", multi_level_index=False)
 
-    # data.to_sql("AMZN", conn, if_exists="replace")
+        data.to_sql("AMZN", conn, if_exists="replace")
 
     conn.close()
     pass
