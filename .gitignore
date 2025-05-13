@@ -9,3 +9,6 @@ notebooks/.ipynb_checkpoints/
 
 poetry.lock
 yfinance_analytics.db
+
+.mypy_cache
+.pytest_cache
