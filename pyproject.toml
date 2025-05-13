@@ -34,3 +34,7 @@ pandas-stubs = "^2.2.3.250308"
 
 [tool.black]
 line-length = 110
+
+[tool.mypy]
+ignore_missing_imports = true
+explicit_package_bases = true
