@@ -1,6 +1,9 @@
 @echo off
 
 echo.
+echo Running development checks...
+
+echo.
 echo Running black...
 black ./stat_arb
 black ./tests
