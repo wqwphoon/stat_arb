@@ -1,7 +1,6 @@
 import datetime as dt
 import logging
 import sqlite3
-from typing import Collection
 
 import yfinance as yf
 
@@ -11,7 +10,7 @@ from stat_arb.model.local_store.ticker_snapshot.ticker_snapshot import get_sp500
 logger = logging.getLogger(__name__)
 
 
-def store_yfinance_data(tickers: Collection[str], dt_start: dt.datetime, dt_end: dt.datetime):
+def store_yfinance_data(tickers: list[str], dt_start: dt.datetime, dt_end: dt.datetime):
     """Streaming response to store each ticker data individually"""
     conn = sqlite3.connect(DB)
     logger.info(f"Connected to database: {DB}")

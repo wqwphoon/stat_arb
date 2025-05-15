@@ -1,5 +1,3 @@
-from typing import Sequence
-
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.linear_model import RegressionResultsWrapper
@@ -30,9 +28,9 @@ class ErrorCorrectionModel_Results:
 class ErrorCorrectionModel:
     @staticmethod
     def fit(
-        price_x: Sequence[float],
-        price_y: Sequence[float],
-        residual: Sequence[float],
+        price_x: pd.Series[float],
+        price_y: pd.Series[float],
+        residual: pd.Series[float],
         reverse_regression: bool = False,
     ) -> ErrorCorrectionModel_Results:
         """
@@ -40,11 +38,11 @@ class ErrorCorrectionModel:
 
         Parameters
         ----------
-        price_x : Sequence[float]
+        price_x : pd.Series[float]
             - Price timeseries of security X.
-        price_y : Sequence[float]
+        price_y : pd.Series[float]
             - Price timeseries of security Y.
-        residual : Sequence[float]
+        residual : pd.Series[float]
             - Timeseries of residual from regressing X onto Y i.e. X = aY + residual
         reverse_regression : bool
             - Regress security Y on security X i.e. plugging in the "wrong way" residuals.
@@ -54,7 +52,7 @@ class ErrorCorrectionModel:
 
         # Concatenate series then difference / lag as required
         rhs = pd.concat([price_x, price_y, residual], axis=1)
-        rhs.columns = [ticker_x, ticker_y, "Residuals"]
+        rhs.columns = pd.Index([ticker_x, ticker_y, "Residuals"])
 
         rhs[f"Δ{ticker_x}"] = rhs[ticker_x].diff()
         rhs[f"Δ{ticker_y}"] = rhs[ticker_y].diff()
