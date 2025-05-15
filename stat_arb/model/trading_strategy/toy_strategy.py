@@ -1,5 +1,4 @@
 import pandas as pd
-from flask.cli import F
 
 from stat_arb.model.trading_strategy.strategy import TradingStrategy
 

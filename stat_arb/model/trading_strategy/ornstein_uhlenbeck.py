@@ -1,6 +1,5 @@
-from typing import Sequence
-
 import numpy as np
+import pandas as pd
 from statsmodels.tsa.ar_model import AutoReg, AutoRegResultsWrapper
 
 
@@ -22,7 +21,7 @@ class OrnsteinUhlenbeckSDE_Results:
 
 
 class OrnsteinUhlenbeckSDE:
-    def __init__(self, x: Sequence[float]):
+    def __init__(self, x: pd.Series[float]):
         self.x = x
 
     def fit_to_sde(self) -> OrnsteinUhlenbeckSDE_Results:
@@ -57,7 +56,7 @@ class OrnsteinUhlenbeckSDE:
 if __name__ == "__main__":
     x = np.random.normal(size=[100])
 
-    ou = OrnsteinUhlenbeckSDE(x)
+    ou = OrnsteinUhlenbeckSDE(pd.Series(x))
     ou.fit_to_sde()
 
     pass
