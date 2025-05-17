@@ -1,6 +1,8 @@
 import datetime as dt
 import logging
-from typing import Sequence
+
+import numpy as np
+import pandas as pd
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
 from stat_arb.model.statistics import (
@@ -80,7 +82,7 @@ class BivariateEngleGranger:
 
         return self.normalised_close_prices
 
-    def get_residual(self) -> Sequence[float]:
+    def get_residual(self) -> np.ndarray:
         self.resids = Regressor().get_residuals(
             self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
         )
@@ -93,7 +95,7 @@ class BivariateEngleGranger:
 
     def test_ecm(self) -> bool:
         ecm = ErrorCorrectionModel.fit(
-            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b], self.resids
+            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b], pd.Series(self.resids)
         )
         return ecm.is_long_run_mean_reverting()
 

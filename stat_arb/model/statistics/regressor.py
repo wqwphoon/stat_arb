@@ -1,5 +1,4 @@
 import logging
-from typing import Sequence
 
 import numpy as np
 import statsmodels.api as sm
@@ -13,7 +12,7 @@ class Regressor:
     def __init__(self):
         self.resids = None
 
-    def get_residuals(self, b: np.ndarray, A: np.ndarray, with_constant: bool = True) -> Sequence[float]:
+    def get_residuals(self, b: np.ndarray, A: np.ndarray, with_constant: bool = True) -> np.ndarray:
         if not self.resids:
             self.regress_timeseries_with_lookahead_bias(b, A, with_constant)
 

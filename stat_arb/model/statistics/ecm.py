@@ -28,9 +28,9 @@ class ErrorCorrectionModel_Results:
 class ErrorCorrectionModel:
     @staticmethod
     def fit(
-        price_x: pd.Series[float],
-        price_y: pd.Series[float],
-        residual: pd.Series[float],
+        price_x: pd.Series,
+        price_y: pd.Series,
+        residual: pd.Series,
         reverse_regression: bool = False,
     ) -> ErrorCorrectionModel_Results:
         """
@@ -38,11 +38,11 @@ class ErrorCorrectionModel:
 
         Parameters
         ----------
-        price_x : pd.Series[float]
+        price_x : pd.Series
             - Price timeseries of security X.
-        price_y : pd.Series[float]
+        price_y : pd.Series
             - Price timeseries of security Y.
-        residual : pd.Series[float]
+        residual : pd.Series
             - Timeseries of residual from regressing X onto Y i.e. X = aY + residual
         reverse_regression : bool
             - Regress security Y on security X i.e. plugging in the "wrong way" residuals.

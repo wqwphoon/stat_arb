@@ -1,5 +1,6 @@
 import datetime as dt
 from functools import wraps
+from typing import Optional
 
 import pandas as pd
 import yfinance as yf
@@ -37,7 +38,7 @@ class YahooFinanceDataHandler(BaseDataHandler):
         self.start_date = start_date
         self.end_date = end_date
 
-        self._data: pd.DataFrame | None = None
+        self._data: Optional[pd.DataFrame] = None
 
     def _fetch_data(self) -> None:
         """Private method to fetch data from yfinance - ensures encapsulation."""
@@ -54,12 +55,23 @@ class YahooFinanceDataHandler(BaseDataHandler):
     @lazy_load_data
     def get_full_data(self) -> pd.DataFrame:
         """Public getter method to access data."""
+        if self._data is None:
+            raise RuntimeError("Unexpected None: data was expected to be loaded")
+
         return self._data
 
     @lazy_load_data
     def get_close_prices(self) -> pd.DataFrame:
         """Public getter method to access close price data."""
-        return self._data.xs(key="Close", axis=1, level=1)
+        if self._data is None:
+            raise RuntimeError("Unexpected None: data was expected to be loaded")
+
+        close = self._data.xs(key="Close", axis=1, level=1)
+
+        if isinstance(close, pd.Series):  # validation as cross section can return a dataframe or series
+            close = close.to_frame()
+
+        return close
 
     def get_normalised_close_prices(self) -> pd.DataFrame:
         close = self.get_close_prices()

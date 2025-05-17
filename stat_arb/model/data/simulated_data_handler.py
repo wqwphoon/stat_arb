@@ -43,9 +43,9 @@ class SimulatedDataHandler(BaseDataHandler):
 
         prices: np.ndarray = self.simulate_gbm(n_period, n_ticker)
 
-        prices: pd.DataFrame = pd.DataFrame(prices, columns=self.tickers, index=period)
+        prices_df: pd.DataFrame = pd.DataFrame(prices, columns=self.tickers, index=period)
 
-        return prices
+        return prices_df
 
     def simulate_gbm(self, n_period, n_ticker) -> np.ndarray:
         rng: np.ndarray = self.get_correlated_random_numbers(n_period, n_ticker)
@@ -66,9 +66,9 @@ class SimulatedDataHandler(BaseDataHandler):
 
     def get_dates(self) -> list[pd.Timestamp]:
         period: pd.DatetimeIndex = pd.date_range(self.start_date, self.end_date)
-        period: list[pd.Timestamp] = [date for date in period if self.is_weekday(date)]
+        weekdays: list[pd.Timestamp] = [date for date in period if self.is_weekday(date)]
 
-        return period
+        return weekdays
 
     def is_weekday(self, date: pd.Timestamp) -> bool:
         return date.dayofweek not in [5, 6]

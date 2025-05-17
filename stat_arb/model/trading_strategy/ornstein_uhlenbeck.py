@@ -21,7 +21,7 @@ class OrnsteinUhlenbeckSDE_Results:
 
 
 class OrnsteinUhlenbeckSDE:
-    def __init__(self, x: pd.Series[float]):
+    def __init__(self, x: pd.Series):
         self.x = x
 
     def fit_to_sde(self) -> OrnsteinUhlenbeckSDE_Results:
