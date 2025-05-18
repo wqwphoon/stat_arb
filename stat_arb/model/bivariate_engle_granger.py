@@ -83,6 +83,8 @@ class BivariateEngleGranger:
         return self.normalised_close_prices
 
     def get_residual(self) -> np.ndarray:
+
+        logger.info(f"tickers get_residual {self.ticker_a} {self.ticker_b}")
         self.resids = Regressor().get_residuals(
             self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
         )

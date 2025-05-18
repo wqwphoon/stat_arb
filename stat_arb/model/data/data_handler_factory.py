@@ -1,3 +1,4 @@
+import datetime as dt
 import logging
 
 from stat_arb.model.data import BaseDataHandler
@@ -13,7 +14,9 @@ class DataHandlerFactory:
     """Factory class to instantiate the appropriate DataHandler."""
 
     @staticmethod
-    def create_data_handler(identifier: str, tickers, start_date, end_date) -> BaseDataHandler:
+    def create_data_handler(
+        identifier: str, tickers, start_date: dt.datetime, end_date: dt.datetime
+    ) -> BaseDataHandler:
         if identifier == DataHandlerEnum.YAHOO:
             logger.info(f"Creating DataHandler type: {DataHandlerEnum.YAHOO.value}")
             return YahooFinanceDataHandler(tickers, start_date, end_date)
