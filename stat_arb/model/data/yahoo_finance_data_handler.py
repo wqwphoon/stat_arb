@@ -26,9 +26,9 @@ class YahooFinanceDataHandler(BaseDataHandler):
         if not tickers:
             raise ValueError("Tickers list cannot be empty.")
         if isinstance(start_date, str):
-            start_date = dt.datetime.strptime(start_date, "%Y-%m-%d")
+            start_date = dt.datetime.fromisoformat(start_date)
         if isinstance(end_date, str):
-            end_date = dt.datetime.strptime(end_date, "%Y-%m-%d")
+            end_date = dt.datetime.fromisoformat(end_date)
         if end_date < start_date:
             raise ValueError("End date must not be before start date")
         if isinstance(tickers, str):
