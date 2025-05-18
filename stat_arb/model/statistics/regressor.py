@@ -1,6 +1,8 @@
 import logging
+from typing import Union
 
 import numpy as np
+import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.rolling import RollingOLS
 
@@ -12,9 +14,16 @@ class Regressor:
     def __init__(self):
         self.resids = None
 
-    def get_residuals(self, b: np.ndarray, A: np.ndarray, with_constant: bool = True) -> np.ndarray:
-        if not self.resids:
+    def get_residuals(
+        self,
+        b: Union[np.ndarray, pd.Series, pd.DataFrame],
+        A: Union[np.ndarray, pd.Series, pd.DataFrame],
+        with_constant: bool = True,
+    ) -> np.ndarray:
+        if self.resids is None:
             self.regress_timeseries_with_lookahead_bias(b, A, with_constant)
+
+        assert self.resids is not None  # for mypy
 
         return self.resids
 
@@ -30,8 +39,11 @@ class Regressor:
         return ols
 
     def regress_timeseries_with_lookahead_bias(
-        self, b: np.ndarray, A: np.ndarray, with_constant: bool = True
-    ):
+        self,
+        b: Union[np.ndarray, pd.Series, pd.DataFrame],
+        A: Union[np.ndarray, pd.Series, pd.DataFrame],
+        with_constant: bool = True,
+    ) -> None:
         logger.info("Running naive regression of timeseries...")
         if with_constant:
             A = sm.add_constant(A)  # make a copy?

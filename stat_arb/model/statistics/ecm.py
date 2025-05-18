@@ -1,3 +1,6 @@
+from typing import Union
+
+import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.linear_model import RegressionResultsWrapper
@@ -30,7 +33,7 @@ class ErrorCorrectionModel:
     def fit(
         price_x: pd.Series,
         price_y: pd.Series,
-        residual: pd.Series,
+        residual: Union[pd.Series, np.ndarray],
         reverse_regression: bool = False,
     ) -> ErrorCorrectionModel_Results:
         """
@@ -51,7 +54,7 @@ class ErrorCorrectionModel:
         ticker_y: str = getattr(price_y, "name", "Y")
 
         # Concatenate series then difference / lag as required
-        rhs = pd.concat([price_x, price_y, residual], axis=1)
+        rhs = pd.concat([price_x, price_y, pd.Series(residual)], axis=1)
         rhs.columns = pd.Index([ticker_x, ticker_y, "Residuals"])
 
         rhs[f"Δ{ticker_x}"] = rhs[ticker_x].diff()

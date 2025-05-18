@@ -17,8 +17,8 @@ flake8 ./tests
 echo.
 echo Running mypy...
 
-mypy ./stat_arb
-mypy ./tests
+mypy ./stat_arb --check-untyped-defs
+mypy ./tests --check-untyped-defs
 
 echo.
 echo Development checks complete.

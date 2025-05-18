@@ -1,3 +1,5 @@
+from typing import Union
+
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.ar_model import AutoReg, AutoRegResultsWrapper
@@ -21,7 +23,7 @@ class OrnsteinUhlenbeckSDE_Results:
 
 
 class OrnsteinUhlenbeckSDE:
-    def __init__(self, x: pd.Series):
+    def __init__(self, x: Union[np.ndarray, pd.Series]):
         self.x = x
 
     def fit_to_sde(self) -> OrnsteinUhlenbeckSDE_Results:
