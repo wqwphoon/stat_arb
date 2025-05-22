@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Literal
 
+import numpy as np
 import pandas as pd
 
 from stat_arb.model.trading_strategy.strategy import TradingStrategy
@@ -13,22 +14,49 @@ class ToyStrategyInputs:
 
 
 class ToyStrategy(TradingStrategy):
-    def __init__(self, x: pd.Series) -> None:
-        self.x = x  # spread
+    def __init__(
+        self, resids: pd.Series, price_x: pd.Series, price_y: pd.Series, beta: pd.Series | float
+    ) -> None:
+        self.resids = resids
+        self.price_x = price_x
+        self.price_y = price_y
+        self.beta = self.to_series(beta)
+
+        cols = [f"{price_x.name}_close", f"{price_y.name}_close", "Resids", "Beta"]
+        self.df: pd.DataFrame = pd.DataFrame([price_x, price_y, resids, self.beta], columns=cols)
+
+    def to_series(self, beta: pd.Series | float) -> pd.Series:
+        if isinstance(beta, float):
+            n = len(self.resids)
+            return pd.Series(np.ones(shape=(n)) * beta)
+        else:
+            return beta
 
     def backtest(self, inputs: ToyStrategyInputs) -> pd.DataFrame:
-        df = pd.DataFrame(self.x)
+        mu = self.resids.mean()
+        sigma = self.resids.std()
 
-        mu = self.x.mean()
-        sigma = self.x.std()
+        self.df["Z-Score"] = (self.df["Residual"] - mu) / sigma
 
-        df["Z-Score"] = (df["Residual"] - mu) / sigma
-
-        df["Signal"] = df["Z-Score"].apply(
+        signal = self.df["Z-Score"].apply(
             lambda x: self.signal(x, inputs.enter_threshold, inputs.exit_threshold)
         )
 
-        return df
+        signal = signal.ffill().fillna(0)
+
+        self.df["Signal"] = signal
+
+        self.df[f"{self.price_x.name}_returns"] = self.df[self.price_x.name].pct_change()
+        self.df[f"{self.price_y.name}_returns"] = self.df[self.price_y.name].pct_change()
+
+        self.df["Portfolio_return"] = self.df["Signal"].shift(1) * (
+            self.df[f"{self.price_x.name}_returns"]
+            - self.df["Beta"] * self.df[f"{self.price_y.name}_returns"]
+        )
+
+        self.df["Cumulative_return"] = (1 + self.df["Portfolio_return"]).cumprod()
+
+        return self.df
 
     def signal(
         self, z_score: float, enter_threshold: float, exit_threshold: float
