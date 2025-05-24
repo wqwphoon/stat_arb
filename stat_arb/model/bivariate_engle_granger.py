@@ -12,7 +12,7 @@ from stat_arb.model.statistics import (
     ErrorCorrectionModel_Results,
     Regressor,
 )
-from stat_arb.model.trading_strategy import OrnsteinUhlenbeckSDE, OrnsteinUhlenbeckSDE_Results
+from stat_arb.model.trading_strategy import OrnsteinUhlenbeckSDE, OrnsteinUhlenbeckSDE_Results, ToyStrategy
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +59,11 @@ class BivariateEngleGranger:
 
         ou: OrnsteinUhlenbeckSDE_Results = OrnsteinUhlenbeckSDE(resids).fit_to_sde()  # noqa: F841
 
+        strategy = ToyStrategy(
+            resids, normalised[self.ticker_a], normalised[self.ticker_b], regressor.get_beta()
+        )
+
+        strategy.backtest()
         pass
 
     def data_init(self) -> None:

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, Optional
 
 import numpy as np
 import pandas as pd
@@ -22,8 +22,8 @@ class ToyStrategy(TradingStrategy):
         self.price_y = price_y
         self.beta = self.to_series(beta)
 
-        cols = [f"{price_x.name}_close", f"{price_y.name}_close", "Resids", "Beta"]
-        self.df: pd.DataFrame = pd.DataFrame([price_x, price_y, resids, self.beta], columns=cols)
+        cols = [f"{price_x.name}_close", f"{price_y.name}_close", "Residual", "Beta"]
+        self.df: pd.DataFrame = pd.concat([price_x, price_y, resids, self.beta], axis=1, keys=cols)
 
     def to_series(self, beta: pd.Series | float) -> pd.Series:
         if isinstance(beta, float):
@@ -32,7 +32,10 @@ class ToyStrategy(TradingStrategy):
         else:
             return beta
 
-    def backtest(self, inputs: ToyStrategyInputs) -> pd.DataFrame:
+    def backtest(self, inputs: Optional[ToyStrategyInputs] = None) -> pd.DataFrame:
+        if inputs is None:
+            inputs = ToyStrategyInputs(enter_threshold=1, exit_threshold=0)
+
         mu = self.resids.mean()
         sigma = self.resids.std()
 
@@ -46,8 +49,8 @@ class ToyStrategy(TradingStrategy):
 
         self.df["Signal"] = signal
 
-        self.df[f"{self.price_x.name}_returns"] = self.df[self.price_x.name].pct_change()
-        self.df[f"{self.price_y.name}_returns"] = self.df[self.price_y.name].pct_change()
+        self.df[f"{self.price_x.name}_returns"] = self.df[f"{self.price_x.name}_close"].pct_change()
+        self.df[f"{self.price_y.name}_returns"] = self.df[f"{self.price_x.name}_close"].pct_change()
 
         self.df["Portfolio_return"] = self.df["Signal"].shift(1) * (
             self.df[f"{self.price_x.name}_returns"]
@@ -55,6 +58,8 @@ class ToyStrategy(TradingStrategy):
         )
 
         self.df["Cumulative_return"] = (1 + self.df["Portfolio_return"]).cumprod()
+
+        # drop na for first row?
 
         return self.df
 
