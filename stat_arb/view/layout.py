@@ -3,8 +3,9 @@ import datetime as dt
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from stat_arb.controller import callbacks, regression_callbacks
+from stat_arb.controller import callbacks, regression_callbacks, strategy_callbacks
 from stat_arb.view.ids import IDS
+from stat_arb.view.trading_strategy_layout import toy_strategy_inputs
 
 
 def layout():
@@ -105,6 +106,13 @@ def layout():
                         is_open=True,
                         style={"marginTop": "20px"},
                     ),
+                ]
+            ),
+            html.Div(
+                [
+                    html.H3("Step 5: Select Trading Strategy", style={"marginTop": "20px"}),
+                    dcc.RadioItems(strategy_callbacks.get_strategy_options(), id=IDS.STRATEGY.TYPE),
+                    toy_strategy_inputs(),
                 ]
             ),
         ],

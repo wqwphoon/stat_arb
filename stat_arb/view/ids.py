@@ -19,3 +19,10 @@ class IDS:
     class GRAPHS:
         PRICE_SERIES = "price-series"
         RESIDUAL = "plot_residual"
+
+    class STRATEGY:
+        TYPE = "strategy-type"
+
+        class TOY_STRATEGY_ID:
+            ENTER = "toy_strategy_enter"
+            EXIT = "toy_strategy_exit"
