@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -15,7 +15,11 @@ class ToyStrategyInputs:
 
 class ToyStrategy(TradingStrategy):
     def __init__(
-        self, resids: pd.Series, price_x: pd.Series, price_y: pd.Series, beta: pd.Series | float
+        self,
+        resids: Union[pd.Series, np.ndarray],
+        price_x: pd.Series,
+        price_y: pd.Series,
+        beta: pd.Series | float,
     ) -> None:
         self.resids = resids
         self.price_x = price_x

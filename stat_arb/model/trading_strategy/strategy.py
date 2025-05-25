@@ -2,14 +2,14 @@ from abc import ABC, abstractmethod
 
 
 class TradingStrategy(ABC):
-    @abstractmethod
+    # @abstractmethod
     def read_input(self):
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def run(self):
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def get_output(self):
         pass

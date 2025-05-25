@@ -50,8 +50,8 @@ class Regressor:
 
         ols = sm.OLS(b, A).fit()
 
-        self.resids = ols.resid
-        self.params = ols.params
+        self.resids = ols.resid  # pd.Series
+        self.params = ols.params  # pd.Series
 
     def get_beta(self) -> pd.Series:
         param_header = [x for x in self.params.index if x != "const"][0]
