@@ -22,7 +22,8 @@ class IDS:
 
     class STRATEGY:
         TYPE = "strategy-type"
+        INPUTS_DIV = "strategy-inputs-div"
 
         class TOY_STRATEGY_ID:
-            ENTER = "toy_strategy_enter"
-            EXIT = "toy_strategy_exit"
+            ENTER = "toy-strategy-enter"
+            EXIT = "toy-strategy-exit"
