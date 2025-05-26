@@ -12,7 +12,13 @@ from stat_arb.model.statistics import (
     ErrorCorrectionModel_Results,
     Regressor,
 )
-from stat_arb.model.trading_strategy import OrnsteinUhlenbeckSDE, OrnsteinUhlenbeckSDE_Results, ToyStrategy
+from stat_arb.model.trading_strategy import (
+    OrnsteinUhlenbeckSDE,
+    OrnsteinUhlenbeckSDE_Results,
+    StrategyEnum,
+    ToyStrategy,
+    TradingStrategy,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +96,10 @@ class BivariateEngleGranger:
     def get_residual(self) -> np.ndarray:
 
         logger.info(f"tickers get_residual {self.ticker_a} {self.ticker_b}")
-        self.resids = Regressor().get_residuals(
+
+        self.regressor = Regressor()
+
+        self.resids = self.regressor.get_residuals(
             self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
         )
 
@@ -105,6 +114,28 @@ class BivariateEngleGranger:
             self.close_prices[self.ticker_a], self.close_prices[self.ticker_b], pd.Series(self.resids)
         )
         return ecm.is_long_run_mean_reverting()
+
+    def trading_strategy_factory(self, strategy_enum: StrategyEnum) -> TradingStrategy:
+        match strategy_enum:
+            case StrategyEnum.ToyStrategy:
+                strategy = ToyStrategy
+            case StrategyEnum.RollingWindow:
+                raise NotImplementedError
+            case StrategyEnum.OrnsteinUhlenbeckSDEFit:
+                raise NotImplementedError
+
+        self.strategy = strategy(
+            self.resids,
+            self.close_prices[self.ticker_a],
+            self.close_prices[self.ticker_b],
+            self.regressor.get_beta(),
+        )
+
+        return self.strategy
+
+    def backtest(self, strategy_type: StrategyEnum, strategy_inputs) -> pd.DataFrame:
+        strategy: TradingStrategy = self.trading_strategy_factory(strategy_type)
+        return strategy.backtest(strategy_inputs)
 
 
 if __name__ == "__main__":

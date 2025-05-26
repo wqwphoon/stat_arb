@@ -14,7 +14,7 @@ def toy_strategy_inputs():
                             min=0,
                             max=5,
                             step=0.1,
-                            id=IDS.STRATEGY.TOY_STRATEGY_ID.ENTER,
+                            id=IDS.STRATEGY.ID_TOY_STRATEGY.ENTER,
                             marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
                             value=1,
                         ),
@@ -31,7 +31,7 @@ def toy_strategy_inputs():
                             min=0,
                             max=5,
                             step=0.1,
-                            id=IDS.STRATEGY.TOY_STRATEGY_ID.EXIT,
+                            id=IDS.STRATEGY.ID_TOY_STRATEGY.EXIT,
                             marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
                         ),
                         style={"width": "400px"},
@@ -39,5 +39,6 @@ def toy_strategy_inputs():
                 ],
                 style={"display": "flex", "width": "50%", "marginTop": "20px"},
             ),
+            dcc.Store(id=IDS.STRATEGY.INPUTS_STORE),
         ]
     )
