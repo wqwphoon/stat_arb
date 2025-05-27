@@ -5,7 +5,6 @@ from dash import dcc, html
 
 from stat_arb.controller import callbacks, regression_callbacks, strategy_callbacks
 from stat_arb.view.ids import IDS
-from stat_arb.view.trading_strategy_layout import toy_strategy_inputs
 
 
 def layout():

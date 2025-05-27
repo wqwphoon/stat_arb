@@ -21,20 +21,22 @@ class ToyStrategy(TradingStrategy):
         price_y: pd.Series,
         beta: pd.Series | float,
     ) -> None:
-        self.resids = resids
+        self.resids = self.to_series(resids)
         self.price_x = price_x
         self.price_y = price_y
         self.beta = self.to_series(beta)
 
         cols = [f"{price_x.name}_close", f"{price_y.name}_close", "Residual", "Beta"]
-        self.df: pd.DataFrame = pd.concat([price_x, price_y, resids, self.beta], axis=1, keys=cols)
+        self.df: pd.DataFrame = pd.concat([price_x, price_y, self.resids, self.beta], axis=1, keys=cols)
 
-    def to_series(self, beta: pd.Series | float) -> pd.Series:
-        if isinstance(beta, float):
+    def to_series(self, vector: pd.Series | float | np.ndarray) -> pd.Series:
+        if isinstance(vector, float):
             n = len(self.resids)
-            return pd.Series(np.ones(shape=(n)) * beta)
+            return pd.Series(np.ones(shape=(n)) * vector)
+        elif isinstance(vector, np.ndarray):
+            return pd.Series(vector)
         else:
-            return beta
+            return vector
 
     def backtest(self, inputs: Optional[ToyStrategyInputs] = None) -> TradingStrategyResults:
         if inputs is None:

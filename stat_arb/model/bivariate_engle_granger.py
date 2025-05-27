@@ -1,7 +1,6 @@
 import datetime as dt
 import logging
 
-import numpy as np
 import pandas as pd
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
@@ -94,7 +93,7 @@ class BivariateEngleGranger:
 
         return self.normalised_close_prices
 
-    def get_residual(self) -> np.ndarray:
+    def get_residual(self) -> pd.Series:
 
         logger.info(f"tickers get_residual {self.ticker_a} {self.ticker_b}")
 
