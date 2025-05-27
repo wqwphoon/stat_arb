@@ -4,7 +4,7 @@ from typing import Literal, Optional, Union
 import numpy as np
 import pandas as pd
 
-from stat_arb.model.trading_strategy.strategy import TradingStrategy
+from stat_arb.model.trading_strategy.strategy import TradingStrategy, TradingStrategyResults
 
 
 @dataclass
@@ -36,7 +36,7 @@ class ToyStrategy(TradingStrategy):
         else:
             return beta
 
-    def backtest(self, inputs: Optional[ToyStrategyInputs] = None) -> pd.DataFrame:
+    def backtest(self, inputs: Optional[ToyStrategyInputs] = None) -> TradingStrategyResults:
         if inputs is None:
             inputs = ToyStrategyInputs(enter_threshold=1, exit_threshold=0)
 
@@ -65,7 +65,7 @@ class ToyStrategy(TradingStrategy):
 
         # drop na for first row?
 
-        return self.df
+        return TradingStrategyResults(self.df)
 
     def signal(
         self, z_score: float, enter_threshold: float, exit_threshold: float

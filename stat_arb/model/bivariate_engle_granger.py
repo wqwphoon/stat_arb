@@ -135,7 +135,9 @@ class BivariateEngleGranger:
 
     def backtest(self, strategy_type: StrategyEnum, strategy_inputs) -> pd.DataFrame:
         strategy: TradingStrategy = self.trading_strategy_factory(strategy_type)
-        return strategy.backtest(strategy_inputs)
+        # refactor factory / backtest functions. there is some sequencing requirement here
+
+        return self.strategy.backtest(strategy_inputs)
 
 
 if __name__ == "__main__":

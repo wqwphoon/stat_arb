@@ -33,6 +33,7 @@ def toy_strategy_inputs():
                             step=0.1,
                             id=IDS.STRATEGY.ID_TOY_STRATEGY.EXIT,
                             marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
+                            value=0,
                         ),
                         style={"width": "400px"},
                     ),

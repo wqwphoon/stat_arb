@@ -24,6 +24,7 @@ class IDS:
         TYPE = "strategy-type"
         INPUTS_DIV = "strategy-inputs-div"
         INPUTS_STORE = "strategy-inputs-store"
+        OUTPUT_DIV = "strategy-output-div"
         OUTPUT_PLOT = "strategy-output-plot"
 
         class ID_TOY_STRATEGY:

@@ -1,6 +1,8 @@
 from logging import getLogger
 
+import plotly
 import plotly.express as px
+import plotly.subplots
 from dash import Input, Output, callback
 
 from stat_arb.controller.callbacks import MODEL, SINGLE_USER_INSTANCE
@@ -45,6 +47,11 @@ def update_strategy_store(strategy_type, toy_strategy_enter, toy_strategy_exit):
     }
 
 
+@callback(Output(IDS.STRATEGY.OUTPUT_DIV, "children"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
+def strategy_output_div(_):
+    model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
+
+
 @callback(Output(IDS.STRATEGY.OUTPUT_PLOT, "figure"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
 def plot_strategy_backtest(strategy_inputs):
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
@@ -53,7 +60,20 @@ def plot_strategy_backtest(strategy_inputs):
 
     df = model.backtest(strategy_inputs["strategy_type"], inputs)
 
-    return px.line(df)
+    fig = plotly.subplots.make_subplots(specs=[[{"secondary_y": True}]])
+
+    fig1 = px.line(df, y=["Z-Score", "Signal"], title="Signal / Z-Score (Primary Y)")
+    fig2 = px.line(df, y=["Residual"], title="Residual (Secondary Y)")
+
+    fig.add_traces(fig1.data)
+
+    for trace in fig2.data:
+        trace.showlegend = False
+        fig.add_traces(trace, secondary_ys=[True])
+
+    fig.update_layout(title_text="Stock Prices", height=800)
+
+    return fig
 
 
 def unpack_strategy_inputs(strategy_inputs: dict):
