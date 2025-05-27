@@ -94,9 +94,6 @@ class BivariateEngleGranger:
         return self.normalised_close_prices
 
     def get_residual(self) -> pd.Series:
-
-        logger.info(f"tickers get_residual {self.ticker_a} {self.ticker_b}")
-
         self.regressor = Regressor()
 
         self.resids = self.regressor.get_residuals(

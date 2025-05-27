@@ -15,10 +15,6 @@ class TradingStrategyResults:
 
 
 class TradingStrategy(ABC):
-    # @abstractmethod
-    def read_input(self):
-        pass
-
     @abstractmethod
-    def backtest(self) -> TradingStrategyResults:
+    def backtest(self, inputs) -> TradingStrategyResults:
         pass

@@ -112,8 +112,8 @@ def layout():
                     html.H3("Step 5: Select Trading Strategy", style={"marginTop": "20px"}),
                     dcc.RadioItems(strategy_callbacks.get_strategy_options(), id=IDS.STRATEGY.TYPE),
                     html.Div(id=IDS.STRATEGY.INPUTS_DIV),
-                    html.Div(id=IDS.STRATEGY.OUTPUT_DIV, style={"marginTop": "20px"}),
                     dcc.Graph(id=IDS.STRATEGY.OUTPUT_PLOT),
+                    html.Div(id=IDS.STRATEGY.OUTPUT_DIV, style={"marginTop": "20px"}),
                 ]
             ),
         ],
