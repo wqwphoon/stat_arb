@@ -19,6 +19,7 @@ from stat_arb.model.trading_strategy import (
     ToyStrategy,
     TradingStrategy,
 )
+from stat_arb.model.trading_strategy.strategy import TradingStrategyResults
 
 logger = logging.getLogger(__name__)
 
@@ -133,11 +134,12 @@ class BivariateEngleGranger:
 
         return self.strategy
 
-    def backtest(self, strategy_type: StrategyEnum, strategy_inputs) -> pd.DataFrame:
-        strategy: TradingStrategy = self.trading_strategy_factory(strategy_type)
-        # refactor factory / backtest functions. there is some sequencing requirement here
+    def backtest(self, strategy_type: StrategyEnum, strategy_inputs) -> TradingStrategyResults:
+        self.trading_strategy_factory(strategy_type)
 
-        return self.strategy.backtest(strategy_inputs)
+        self.backtest_results = self.strategy.backtest(strategy_inputs)
+
+        return self.backtest_results
 
 
 if __name__ == "__main__":

@@ -58,7 +58,9 @@ def plot_strategy_backtest(strategy_inputs):
 
     inputs = unpack_strategy_inputs(strategy_inputs)
 
-    df = model.backtest(strategy_inputs["strategy_type"], inputs)
+    trading_strategy_results = model.backtest(strategy_inputs["strategy_type"], inputs)
+
+    df = trading_strategy_results.get_backtest()
 
     fig = plotly.subplots.make_subplots(specs=[[{"secondary_y": True}]])
 
