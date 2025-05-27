@@ -3,7 +3,7 @@ from logging import getLogger
 import plotly
 import plotly.express as px
 import plotly.subplots
-from dash import Input, Output, callback
+from dash import Input, Output, callback, html
 
 from stat_arb.controller.callbacks import MODEL, SINGLE_USER_INSTANCE
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
@@ -48,8 +48,17 @@ def update_strategy_store(strategy_type, toy_strategy_enter, toy_strategy_exit):
 
 
 @callback(Output(IDS.STRATEGY.OUTPUT_DIV, "children"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
-def strategy_output_div(_):
+def strategy_output_div(store):
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
+
+    return html.Div(
+        [
+            html.P(f"Chosen Strategy: {store["strategy_type"]}"),
+            html.P(f"Enter Threshold: {store["toy_strategy_enter"]}"),
+            html.P(f"Exit Threshold: {store["toy_strategy_exit"]}"),
+            html.P(f"Cumulative Return: {model.backtest_results.get_cum_return():.4f}"),
+        ]
+    )
 
 
 @callback(Output(IDS.STRATEGY.OUTPUT_PLOT, "figure"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))

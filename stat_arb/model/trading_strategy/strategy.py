@@ -11,7 +11,7 @@ class TradingStrategyResults:
         return self._backtest
 
     def get_cum_return(self):
-        return self._backtest.tail(1)["Cumulative_return"]
+        return self._backtest.iloc[-1]["Cumulative_return"]
 
 
 class TradingStrategy(ABC):
