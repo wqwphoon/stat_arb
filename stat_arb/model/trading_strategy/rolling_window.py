@@ -11,12 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class ToyStrategyInputs:
+class RollingWindowInputs:
     enter_threshold: float
     exit_threshold: float
+    window_length: int
 
 
-class ToyStrategy(TradingStrategy):
+class RollingWindow(TradingStrategy):
     def __init__(
         self,
         resids: Union[pd.Series, np.ndarray],
@@ -41,14 +42,13 @@ class ToyStrategy(TradingStrategy):
         else:
             return vector
 
-    def backtest(self, inputs: Optional[ToyStrategyInputs] = None) -> TradingStrategyResults:
+    def backtest(self, inputs: Optional[RollingWindowInputs] = None) -> TradingStrategyResults:
         if inputs is None:
-            inputs = ToyStrategyInputs(enter_threshold=1, exit_threshold=0)
+            inputs = RollingWindowInputs(enter_threshold=1, exit_threshold=0, window_length=30)
 
-        mu = self.resids.mean()
-        sigma = self.resids.std()
-
-        self.df["Z-Score"] = (self.df["Residual"] - mu) / sigma
+        self.df["Z-Score"] = (
+            self.df["Residual"] - self.df["Residual"].rolling(inputs.window_length).mean()
+        ) / self.df["Residual"].rolling(inputs.window_length).std()
 
         self.df["LongEntrySignal"] = self.df["Z-Score"] < -inputs.enter_threshold
         self.df["ShortEntrySignal"] = self.df["Z-Score"] > inputs.enter_threshold

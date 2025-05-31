@@ -7,10 +7,9 @@ from dash import Input, Output, callback, html
 
 from stat_arb.controller.callbacks import MODEL, SINGLE_USER_INSTANCE
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
-from stat_arb.model.trading_strategy.strategy_enum import StrategyEnum
-from stat_arb.model.trading_strategy.toy_strategy import ToyStrategyInputs
+from stat_arb.model.trading_strategy import RollingWindowInputs, StrategyEnum, ToyStrategyInputs
 from stat_arb.view.ids import IDS
-from stat_arb.view.trading_strategy_layout import toy_strategy_inputs
+from stat_arb.view.trading_strategy_layout import rolling_window_inputs, toy_strategy_inputs
 
 logger = getLogger(__name__)
 
@@ -26,7 +25,7 @@ def strategy_inputs(strategy_type):
     if strategy == StrategyEnum.ToyStrategy:
         return toy_strategy_inputs()
     elif strategy == StrategyEnum.RollingWindow:
-        raise NotImplementedError
+        return rolling_window_inputs()
     elif strategy == StrategyEnum.OrnsteinUhlenbeckSDEFit:
         raise NotImplementedError
     else:
@@ -38,12 +37,25 @@ def strategy_inputs(strategy_type):
     Input(IDS.STRATEGY.TYPE, "value"),
     Input(IDS.STRATEGY.ID_TOY_STRATEGY.ENTER, "value"),
     Input(IDS.STRATEGY.ID_TOY_STRATEGY.EXIT, "value"),
+    Input(IDS.STRATEGY.ID_ROLLING_WINDOW.ENTER, "value"),
+    Input(IDS.STRATEGY.ID_ROLLING_WINDOW.EXIT, "value"),
+    Input(IDS.STRATEGY.ID_ROLLING_WINDOW.LENGTH, "value"),
 )
-def update_strategy_store(strategy_type, toy_strategy_enter, toy_strategy_exit):
+def update_strategy_store(
+    strategy_type,
+    toy_strategy_enter,
+    toy_strategy_exit,
+    rolling_window_enter,
+    rolling_window_exit,
+    rolling_window_length,
+):
     return {
         "strategy_type": strategy_type,
         "toy_strategy_enter": toy_strategy_enter,
         "toy_strategy_exit": toy_strategy_exit,
+        "rolling_window_enter": rolling_window_enter,
+        "rolling_window_exit": rolling_window_exit,
+        "rolling_window_length": rolling_window_length,
     }
 
 
@@ -98,7 +110,11 @@ def unpack_strategy_inputs(strategy_inputs: dict):
                 strategy_inputs["toy_strategy_enter"], strategy_inputs["toy_strategy_exit"]
             )
         case StrategyEnum.RollingWindow:
-            raise NotImplementedError
+            return RollingWindowInputs(
+                strategy_inputs["rolling_window_enter"],
+                strategy_inputs["rolling_window_exit"],
+                strategy_inputs["rolling_window_length"],
+            )
         case StrategyEnum.OrnsteinUhlenbeckSDEFit:
             raise NotImplementedError
     raise NotImplementedError

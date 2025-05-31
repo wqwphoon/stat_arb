@@ -30,3 +30,8 @@ class IDS:
         class ID_TOY_STRATEGY:
             ENTER = "toy-strategy-enter"
             EXIT = "toy-strategy-exit"
+
+        class ID_ROLLING_WINDOW:
+            ENTER = "rolling-window-enter"
+            EXIT = "rolling-window-exit"
+            LENGTH = "rolling-window-length"
