@@ -47,13 +47,41 @@ class ToyStrategy(TradingStrategy):
 
         self.df["Z-Score"] = (self.df["Residual"] - mu) / sigma
 
-        signal = self.df["Z-Score"].apply(
-            lambda x: self.signal(x, inputs.enter_threshold, inputs.exit_threshold)
-        )
+        self.df["LongEntrySignal"] = self.df["Z-Score"] < -ToyStrategyInputs.enter_threshold
+        self.df["ShortEntrySignal"] = self.df["Z-Score"] > ToyStrategyInputs.enter_threshold
+        self.df["LongExitSignal"] = self.df["Z-Score"] > -ToyStrategyInputs.exit_threshold
+        self.df["ShortExitSignal"] = self.df["Z-Score"] < ToyStrategyInputs.exit_threshold
 
-        signal = signal.ffill().fillna(0)
+        current_signal = 0
+        signals = []
 
-        self.df["Signal"] = signal
+        for index, row in self.df.iterrows():
+            if current_signal == 0:
+                if row["LongEntrySignal"]:
+                    new_signal = 1
+                elif row["ShortEntrySignal"]:
+                    new_signal = -1
+                else:
+                    new_signal = 0
+            elif current_signal == 1:
+                if row["ShortEntrySignal"]:
+                    new_signal = -1
+                elif row["LongExitSignal"]:
+                    new_signal = 0
+                else:
+                    new_signal = 1
+            else:  # current_signal == -1
+                if row["LongEntrySignal"]:
+                    new_signal = 1
+                elif row["ShortExitSignal"]:
+                    new_signal = 0
+                else:
+                    new_signal = -1
+
+            current_signal = new_signal
+            signals.append(new_signal)
+
+        self.df["Signal"] = signals
 
         self.df[f"{self.price_x.name}_returns"] = self.df[f"{self.price_x.name}_close"].pct_change()
         self.df[f"{self.price_y.name}_returns"] = self.df[f"{self.price_x.name}_close"].pct_change()
