@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from typing import Literal, Optional, Union
 
@@ -5,6 +6,8 @@ import numpy as np
 import pandas as pd
 
 from stat_arb.model.trading_strategy.strategy import TradingStrategy, TradingStrategyResults
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -47,36 +50,37 @@ class ToyStrategy(TradingStrategy):
 
         self.df["Z-Score"] = (self.df["Residual"] - mu) / sigma
 
-        self.df["LongEntrySignal"] = self.df["Z-Score"] < -ToyStrategyInputs.enter_threshold
-        self.df["ShortEntrySignal"] = self.df["Z-Score"] > ToyStrategyInputs.enter_threshold
-        self.df["LongExitSignal"] = self.df["Z-Score"] > -ToyStrategyInputs.exit_threshold
-        self.df["ShortExitSignal"] = self.df["Z-Score"] < ToyStrategyInputs.exit_threshold
+        self.df["LongEntrySignal"] = self.df["Z-Score"] < -inputs.enter_threshold
+        self.df["ShortEntrySignal"] = self.df["Z-Score"] > inputs.enter_threshold
+        self.df["LongExitSignal"] = self.df["Z-Score"] > -inputs.exit_threshold
+        self.df["ShortExitSignal"] = self.df["Z-Score"] < inputs.exit_threshold
 
         current_signal = 0
         signals = []
 
         for index, row in self.df.iterrows():
-            if current_signal == 0:
-                if row["LongEntrySignal"]:
-                    new_signal = 1
-                elif row["ShortEntrySignal"]:
-                    new_signal = -1
-                else:
-                    new_signal = 0
-            elif current_signal == 1:
-                if row["ShortEntrySignal"]:
-                    new_signal = -1
-                elif row["LongExitSignal"]:
-                    new_signal = 0
-                else:
-                    new_signal = 1
-            else:  # current_signal == -1
-                if row["LongEntrySignal"]:
-                    new_signal = 1
-                elif row["ShortExitSignal"]:
-                    new_signal = 0
-                else:
-                    new_signal = -1
+            match current_signal:
+                case 0:
+                    if row["LongEntrySignal"]:
+                        new_signal = 1
+                    elif row["ShortEntrySignal"]:
+                        new_signal = -1
+                    else:
+                        new_signal = 0
+                case 1:
+                    if row["ShortEntrySignal"]:
+                        new_signal = -1
+                    elif row["LongExitSignal"]:
+                        new_signal = 0
+                    else:
+                        new_signal = 1
+                case -1:
+                    if row["LongEntrySignal"]:
+                        new_signal = 1
+                    elif row["ShortExitSignal"]:
+                        new_signal = 0
+                    else:
+                        new_signal = -1
 
             current_signal = new_signal
             signals.append(new_signal)
