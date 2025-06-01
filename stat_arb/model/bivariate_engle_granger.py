@@ -12,6 +12,7 @@ from stat_arb.model.trading_strategy import (
     TradingStrategy,
     TradingStrategyResults,
 )
+from stat_arb.model.trading_strategy.toy_strategy import ToyStrategyInputs
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class BivariateEngleGranger:
 
         self.data_init()
 
-        self.get_normalised_close_prices()
+        self.get_close_prices()
 
         self.get_residual()
 
@@ -57,41 +58,29 @@ class BivariateEngleGranger:
 
         logger.info("Initiate Trading Strategy...")
 
-        self.backtest(strategy_enum, strategy_inputs)
-
-        pass
+        return self.backtest(strategy_enum, strategy_inputs)
 
     def data_init(self) -> None:
         self.data_handler = DataHandlerFactory.create_data_handler(
             self.data_handler_enum, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
         )
 
-    def get_close_prices(self):
+    def get_close_prices(self, normalise_prices=True) -> pd.DataFrame:
         if not getattr(self, "data_handler", None):
             self.data_init()
 
-        self.close_prices = self.data_handler.get_close_prices()
+        if normalise_prices:
+            self.close_prices = self.data_handler.get_normalised_close_prices()
+        else:
+            self.close_prices = self.data_handler.get_close_prices()
 
         return self.close_prices
 
-    def get_normalised_close_prices(self):
-        if not getattr(self, "data_handler", None):
-            self.data_init()
-
-        self.normalised_close_prices = self.data_handler.get_normalised_close_prices()
-
-        return self.normalised_close_prices
-
-    def get_residual(self, use_normalised_prices=True) -> pd.Series:
+    def get_residual(self) -> pd.Series:
         self.regressor = Regressor()
 
-        if not use_normalised_prices:
-            self.resids = self.regressor.get_residuals(
-                self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
-            )
-
         self.resids = self.regressor.get_residuals(
-            self.normalised_close_prices[self.ticker_a], self.normalised_close_prices[self.ticker_b]
+            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
         )
 
         return self.resids
@@ -140,4 +129,8 @@ if __name__ == "__main__":
     live = dt.datetime(2025, 1, 6)
     data_enum = DataHandlerEnum.SIMULATED
     model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, data_enum)
+
+    strategy_type = StrategyEnum.ToyStrategy
+    strategy_inputs = ToyStrategyInputs(1, 0)
+    model.run(strategy_type, strategy_inputs)
     pass
