@@ -1,3 +1,6 @@
+STRATEGY_INPUT = "strategy-input"
+
+
 class IDS:
     class STORE_INPUTS:
         DATE_RANGE = "date-range"
@@ -28,10 +31,10 @@ class IDS:
         OUTPUT_PLOT = "strategy-output-plot"
 
         class ID_TOY_STRATEGY:
-            ENTER = "toy-strategy-enter"
-            EXIT = "toy-strategy-exit"
+            ENTER = {"type": STRATEGY_INPUT, "name": "toy-strategy-enter"}
+            EXIT = {"type": STRATEGY_INPUT, "name": "toy-strategy-exit"}
 
         class ID_ROLLING_WINDOW:
-            ENTER = "rolling-window-enter"
-            EXIT = "rolling-window-exit"
-            LENGTH = "rolling-window-length"
+            ENTER = {"type": STRATEGY_INPUT, "name": "rolling-window-enter"}
+            EXIT = {"type": STRATEGY_INPUT, "name": "rolling-window-exit"}
+            LENGTH = {"type": STRATEGY_INPUT, "name": "rolling-window-length"}

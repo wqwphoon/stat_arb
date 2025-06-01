@@ -3,12 +3,12 @@ from logging import getLogger
 import plotly
 import plotly.express as px
 import plotly.subplots
-from dash import Input, Output, callback, html
+from dash import ALL, Input, Output, callback, ctx, html
 
 from stat_arb.controller.callbacks import MODEL, SINGLE_USER_INSTANCE
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.trading_strategy import RollingWindowInputs, StrategyEnum, ToyStrategyInputs
-from stat_arb.view.ids import IDS
+from stat_arb.view.ids import IDS, STRATEGY_INPUT
 from stat_arb.view.trading_strategy_layout import rolling_window_inputs, toy_strategy_inputs
 
 logger = getLogger(__name__)
@@ -35,28 +35,15 @@ def strategy_inputs(strategy_type):
 @callback(
     Output(IDS.STRATEGY.INPUTS_STORE, "data"),
     Input(IDS.STRATEGY.TYPE, "value"),
-    Input(IDS.STRATEGY.ID_TOY_STRATEGY.ENTER, "value"),
-    Input(IDS.STRATEGY.ID_TOY_STRATEGY.EXIT, "value"),
-    Input(IDS.STRATEGY.ID_ROLLING_WINDOW.ENTER, "value"),
-    Input(IDS.STRATEGY.ID_ROLLING_WINDOW.EXIT, "value"),
-    Input(IDS.STRATEGY.ID_ROLLING_WINDOW.LENGTH, "value"),
+    Input({"type": STRATEGY_INPUT, "name": ALL}, "value"),
 )
 def update_strategy_store(
     strategy_type,
-    toy_strategy_enter,
-    toy_strategy_exit,
-    rolling_window_enter,
-    rolling_window_exit,
-    rolling_window_length,
+    strategy_values,
 ):
-    return {
-        "strategy_type": strategy_type,
-        "toy_strategy_enter": toy_strategy_enter,
-        "toy_strategy_exit": toy_strategy_exit,
-        "rolling_window_enter": rolling_window_enter,
-        "rolling_window_exit": rolling_window_exit,
-        "rolling_window_length": rolling_window_length,
-    }
+    matched_inputs = {item["id"]["name"]: item["value"] for item in ctx.inputs_list[1]}
+
+    return {"strategy_type": strategy_type, **matched_inputs}
 
 
 @callback(Output(IDS.STRATEGY.OUTPUT_DIV, "children"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
@@ -66,8 +53,8 @@ def strategy_output_div(store):
     return html.Div(
         [
             html.P(f"Chosen Strategy: {store["strategy_type"]}"),
-            html.P(f"Enter Threshold: {store["toy_strategy_enter"]}"),
-            html.P(f"Exit Threshold: {store["toy_strategy_exit"]}"),
+            # html.P(f"Enter Threshold: {store["toy_strategy_enter"]}"),
+            # html.P(f"Exit Threshold: {store["toy_strategy_exit"]}"),
             html.P(f"Cumulative Return: {model.backtest_results.get_cum_return():.4f}"),
         ]
     )
@@ -107,13 +94,14 @@ def unpack_strategy_inputs(strategy_inputs: dict):
     match strategy_type:
         case StrategyEnum.ToyStrategy:
             return ToyStrategyInputs(
-                strategy_inputs["toy_strategy_enter"], strategy_inputs["toy_strategy_exit"]
+                strategy_inputs[IDS.STRATEGY.ID_TOY_STRATEGY.ENTER["name"]],
+                strategy_inputs[IDS.STRATEGY.ID_TOY_STRATEGY.EXIT["name"]],
             )
         case StrategyEnum.RollingWindow:
             return RollingWindowInputs(
-                strategy_inputs["rolling_window_enter"],
-                strategy_inputs["rolling_window_exit"],
-                strategy_inputs["rolling_window_length"],
+                strategy_inputs[IDS.STRATEGY.ID_ROLLING_WINDOW.ENTER["name"]],
+                strategy_inputs[IDS.STRATEGY.ID_ROLLING_WINDOW.EXIT["name"]],
+                strategy_inputs[IDS.STRATEGY.ID_ROLLING_WINDOW.LENGTH["name"]],
             )
         case StrategyEnum.OrnsteinUhlenbeckSDEFit:
             raise NotImplementedError
