@@ -31,10 +31,10 @@ class IDS:
         OUTPUT_PLOT = "strategy-output-plot"
 
         class ID_TOY_STRATEGY:
-            ENTER = {"type": STRATEGY_INPUT, "name": "toy-strategy-enter"}
-            EXIT = {"type": STRATEGY_INPUT, "name": "toy-strategy-exit"}
+            ENTER = {"id_type": STRATEGY_INPUT, "name": "toy-strategy", "property": "enter"}
+            EXIT = {"id_type": STRATEGY_INPUT, "name": "toy-strategy", "property": "exit"}
 
         class ID_ROLLING_WINDOW:
-            ENTER = {"type": STRATEGY_INPUT, "name": "rolling-window-enter"}
-            EXIT = {"type": STRATEGY_INPUT, "name": "rolling-window-exit"}
-            LENGTH = {"type": STRATEGY_INPUT, "name": "rolling-window-length"}
+            ENTER = {"id_type": STRATEGY_INPUT, "name": "rolling-window", "property": "enter"}
+            EXIT = {"id_type": STRATEGY_INPUT, "name": "rolling-window-exit", "property": "exit"}
+            LENGTH = {"id_type": STRATEGY_INPUT, "name": "rolling-window", "property": "length"}
