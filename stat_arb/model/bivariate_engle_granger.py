@@ -14,11 +14,12 @@ from stat_arb.model.statistics import (
 from stat_arb.model.trading_strategy import (
     OrnsteinUhlenbeckSDE,
     OrnsteinUhlenbeckSDE_Results,
+    RollingWindow,
     StrategyEnum,
     ToyStrategy,
     TradingStrategy,
+    TradingStrategyResults,
 )
-from stat_arb.model.trading_strategy.strategy import TradingStrategyResults
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +118,7 @@ class BivariateEngleGranger:
             case StrategyEnum.ToyStrategy:
                 strategy = ToyStrategy
             case StrategyEnum.RollingWindow:
-                raise NotImplementedError
+                strategy = RollingWindow
             case StrategyEnum.OrnsteinUhlenbeckSDEFit:
                 raise NotImplementedError
 
