@@ -13,6 +13,8 @@ class TradingStrategyResults:
     def get_cum_return(self):
         return self._backtest.iloc[-1]["Cumulative_return"]
 
+    def get_sharpe_ratio(self): ...
+
 
 class TradingStrategy(ABC):
     @abstractmethod

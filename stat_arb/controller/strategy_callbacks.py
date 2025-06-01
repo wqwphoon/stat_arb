@@ -41,10 +41,7 @@ def update_strategy_store(
     strategy_type,
     strategy_values,
 ):
-    logger.info(ctx.inputs_list[1])
     matched_inputs = {item["id"]["property"]: item["value"] for item in ctx.inputs_list[1]}
-
-    logger.info(f"{matched_inputs=}")
 
     return {"strategy_type": strategy_type, **matched_inputs}
 
@@ -52,8 +49,6 @@ def update_strategy_store(
 @callback(Output(IDS.STRATEGY.OUTPUT_DIV, "children"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
 def strategy_output_div(store):
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
-
-    logger.info(f"strategy_output_div - {store}")
 
     return html.Div(
         [

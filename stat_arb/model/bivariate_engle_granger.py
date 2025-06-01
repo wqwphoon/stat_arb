@@ -4,16 +4,8 @@ import logging
 import pandas as pd
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
-from stat_arb.model.statistics import (
-    CointegratedAugmentedDickeyFuller,
-    CointegratedAugmentedDickeyFuller_Results,
-    ErrorCorrectionModel,
-    ErrorCorrectionModel_Results,
-    Regressor,
-)
+from stat_arb.model.statistics import CointegratedAugmentedDickeyFuller, ErrorCorrectionModel, Regressor
 from stat_arb.model.trading_strategy import (
-    OrnsteinUhlenbeckSDE,
-    OrnsteinUhlenbeckSDE_Results,
     RollingWindow,
     StrategyEnum,
     ToyStrategy,
@@ -41,36 +33,32 @@ class BivariateEngleGranger:
         self.live_start_date = live_start_date
         self.data_handler_enum = data_handler_enum
 
-    def run(self):
-        data = DataHandlerFactory.create_data_handler(
-            self.data_handler_enum, [self.ticker_a, self.ticker_b], self.start_date, self.end_date
-        )
+    def run(self, strategy_enum: StrategyEnum, strategy_inputs):
 
-        normalised = data.get_normalised_close_prices()
+        logger.info("Initiate Data Extraction...")
 
-        regressor = Regressor()
+        self.data_init()
 
-        resids = regressor.get_residuals(
-            normalised[self.ticker_a], normalised[self.ticker_b], with_constant=True
-        )
+        self.get_normalised_close_prices()
 
-        stationary: CointegratedAugmentedDickeyFuller_Results = (  # noqa: F841
-            CointegratedAugmentedDickeyFuller.test_stationarity(resids, k_vars=2)
-        )
+        self.get_residual()
 
-        ecm: ErrorCorrectionModel_Results = ErrorCorrectionModel.fit(
-            normalised[self.ticker_a], normalised[self.ticker_b], resids
-        )
+        logger.info("Initiate Statistical Tests...")
 
-        long_run = ecm.is_long_run_mean_reverting()  # noqa: F841
+        if self.test_cadf() is True:
+            logger.info("Residual is stationary at 5% significance")
+        else:
+            logger.info("Reidual is not stationary at 5% significance")
 
-        ou: OrnsteinUhlenbeckSDE_Results = OrnsteinUhlenbeckSDE(resids).fit_to_sde()  # noqa: F841
+        if self.test_ecm() is True:
+            logger.info("Residual displays long run mean reversion at 5% significance")
+        else:
+            logger.info("Residual absent of long run mean reversionat 5% significance")
 
-        strategy = ToyStrategy(
-            resids, normalised[self.ticker_a], normalised[self.ticker_b], regressor.get_beta()
-        )
+        logger.info("Initiate Trading Strategy...")
 
-        strategy.backtest()
+        self.backtest(strategy_enum, strategy_inputs)
+
         pass
 
     def data_init(self) -> None:
@@ -94,11 +82,16 @@ class BivariateEngleGranger:
 
         return self.normalised_close_prices
 
-    def get_residual(self) -> pd.Series:
+    def get_residual(self, use_normalised_prices=True) -> pd.Series:
         self.regressor = Regressor()
 
+        if not use_normalised_prices:
+            self.resids = self.regressor.get_residuals(
+                self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
+            )
+
         self.resids = self.regressor.get_residuals(
-            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
+            self.normalised_close_prices[self.ticker_a], self.normalised_close_prices[self.ticker_b]
         )
 
         return self.resids
@@ -147,5 +140,4 @@ if __name__ == "__main__":
     live = dt.datetime(2025, 1, 6)
     data_enum = DataHandlerEnum.SIMULATED
     model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, data_enum)
-    model.run()
     pass
