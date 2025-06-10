@@ -4,7 +4,9 @@ import logging
 import pandas as pd
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
-from stat_arb.model.statistics import CointegratedAugmentedDickeyFuller, ErrorCorrectionModel, Regressor
+from stat_arb.model.regressor import NaiveRegressor, Regressor, RegressorEnum
+from stat_arb.model.regressor.naive_regressor import NaiveRegressorInputs
+from stat_arb.model.statistics import CointegratedAugmentedDickeyFuller, ErrorCorrectionModel
 from stat_arb.model.trading_strategy import (
     RollingWindow,
     StrategyEnum,
@@ -34,7 +36,9 @@ class BivariateEngleGranger:
         self.live_start_date = live_start_date
         self.data_handler_enum = data_handler_enum
 
-    def run(self, strategy_enum: StrategyEnum, strategy_inputs):
+    def run(
+        self, regressor_enum: RegressorEnum, regressor_inputs, strategy_enum: StrategyEnum, strategy_inputs
+    ):
 
         logger.info("Initiate Data Extraction...")
 
@@ -42,7 +46,7 @@ class BivariateEngleGranger:
 
         self.get_close_prices()
 
-        self.get_residual()
+        self.get_residual(regressor_enum, regressor_inputs)
 
         logger.info("Initiate Statistical Tests...")
 
@@ -76,12 +80,21 @@ class BivariateEngleGranger:
 
         return self.close_prices
 
-    def get_residual(self) -> pd.Series:
-        self.regressor = Regressor()
+    def regressor_factory(self, regressor_enum: RegressorEnum) -> Regressor:
+        match regressor_enum:
+            case RegressorEnum.NAIVE:
+                regressor = NaiveRegressor
+            case RegressorEnum.ROLLING_WINDOW:
+                raise NotImplementedError
+            case RegressorEnum.KALMAN_FILTER:
+                raise NotImplementedError
 
-        self.resids = self.regressor.get_residuals(
-            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b]
-        )
+        self.regressor = regressor(self.close_prices[self.ticker_a], self.close_prices[self.ticker_b])
+
+    def get_residual(self, regressor_enum: RegressorEnum, regressor_inputs):
+        self.regressor_factory(regressor_enum)
+
+        self.resids = self.regressor.get_residual(regressor_inputs)
 
         return self.resids
 
@@ -132,5 +145,9 @@ if __name__ == "__main__":
 
     strategy_type = StrategyEnum.ToyStrategy
     strategy_inputs = ToyStrategyInputs(1, 0)
-    model.run(strategy_type, strategy_inputs)
+
+    regressor_type = RegressorEnum.NAIVE
+    regressor_inputs = NaiveRegressorInputs(True)
+
+    model.run(regressor_type, regressor_inputs, strategy_type, strategy_inputs)
     pass
