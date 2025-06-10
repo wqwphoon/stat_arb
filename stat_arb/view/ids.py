@@ -1,4 +1,5 @@
 STRATEGY_INPUT = "strategy-input"
+REGRESSION_INPUT = "regression-input"
 
 
 class IDS:
@@ -14,6 +15,12 @@ class IDS:
 
     class REGRESSION:
         TYPE = "regression-type"
+
+        class ID_NAIVE_REGRESSION:
+            pass
+
+        class ID_ROLLING_WINDOW_REGRESSION:
+            WINDOW_LENGTH = {"id_type": REGRESSION_INPUT, "name": "rolling-window", "property": "length"}
 
     class STATISTICS:
         ADF_RESULT = "adf-result"

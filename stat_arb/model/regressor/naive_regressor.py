@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class NaiveRegressorInputs:
-    with_constant: bool
+    pass
 
 
 # Naive regression of timeseries with lookahead bias
@@ -29,12 +29,12 @@ class NaiveRegressor(Regressor):
     def get_residual(self, inputs: NaiveRegressorInputs):
         logger.info("Running naive regression of timeseries...")
 
-        if inputs.with_constant:
-            self.A = sm.add_constant(self.A)
+        # if inputs.with_constant:
+        self.A = sm.add_constant(self.A)
 
         ols = sm.OLS(self.b, self.A).fit()
 
-        return ols.resid
+        self.params = ols.params
+        self.resids = ols.resid
 
-    def get_beta(self):
-        pass
+        return self.resids

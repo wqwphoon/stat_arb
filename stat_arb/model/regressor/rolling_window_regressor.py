@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 @dataclass
 class RollingWindowRegressorInputs:
     window_length: int
-    with_constant: bool
 
 
 class RollingWindowRegressor(Regressor):
@@ -22,9 +21,13 @@ class RollingWindowRegressor(Regressor):
 
     def get_residual(self, inputs: RollingWindowRegressorInputs):
         logger.info("Running rolling regression of timeseries...")
-        if inputs.with_constant:
-            self.A = sm.add_constant(self.A)  # make a copy?
+
+        # if inputs.with_constant:
+        self.A = sm.add_constant(self.A)  # make a copy?
 
         ols = RollingOLS(self.b, self.A, window=inputs.window_length, expanding=False).fit()
 
-        return ols
+        self.params = ols.params
+        self.resids = ols.resid
+
+        return self.resids
