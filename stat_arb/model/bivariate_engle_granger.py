@@ -6,6 +6,7 @@ import pandas as pd
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
 from stat_arb.model.regressor import NaiveRegressor, Regressor, RegressorEnum
 from stat_arb.model.regressor.naive_regressor import NaiveRegressorInputs
+from stat_arb.model.regressor.rolling_window_regressor import RollingWindowRegressor
 from stat_arb.model.statistics import CointegratedAugmentedDickeyFuller, ErrorCorrectionModel
 from stat_arb.model.trading_strategy import (
     RollingWindow,
@@ -85,7 +86,7 @@ class BivariateEngleGranger:
             case RegressorEnum.NAIVE:
                 regressor = NaiveRegressor
             case RegressorEnum.ROLLING_WINDOW:
-                raise NotImplementedError
+                regressor = RollingWindowRegressor
             case RegressorEnum.KALMAN_FILTER:
                 raise NotImplementedError
 

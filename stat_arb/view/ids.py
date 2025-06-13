@@ -16,6 +16,7 @@ class IDS:
     class REGRESSION:
         TYPE = "regression-type"
         INPUTS_DIV = "regression-inputs-div"
+        INPUTS_STORE = "regression-inputs-store"
 
         class ID_NAIVE_REGRESSION:
             pass

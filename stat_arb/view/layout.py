@@ -83,6 +83,7 @@ def layout():
                 [
                     html.H3("Step 3: Select Regression Method", style={"marginTop": "20px"}),
                     dcc.RadioItems(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
+                    html.Div(id=IDS.REGRESSION.INPUTS_DIV),
                     dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
                 ]
             ),

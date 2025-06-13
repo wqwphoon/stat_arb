@@ -4,7 +4,7 @@ from stat_arb.view.ids import IDS
 
 
 def naive_regressor_inputs():
-    return None
+    return html.Div(dcc.Store(id=IDS.REGRESSION.INPUTS_STORE))
 
 
 def rolling_window_regressor_inputs():
@@ -26,6 +26,6 @@ def rolling_window_regressor_inputs():
                 ],
                 style={"display": "flex", "width": "50%", "marginTop": "20px"},
             ),
-            # dcc.Store(id=IDS.STRATEGY.INPUTS_STORE),
+            dcc.Store(id=IDS.REGRESSION.INPUTS_STORE),
         ]
     )
