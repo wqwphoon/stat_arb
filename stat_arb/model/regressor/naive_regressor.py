@@ -36,7 +36,19 @@ class NaiveRegressor(Regressor):
 
         betas = np.ones(shape=self.A.shape) * ols.params.values
 
-        self.params = pd.DataFrame(betas, index=self.A.index, columns=self.A.columns)
+        self.params = pd.DataFrame(betas)
+
+        if isinstance(self.A, (pd.DataFrame, pd.Series)):
+            self.params.index = self.A.index
+            self.params.columns = self.A.columns
+
         self.resids = ols.resid
 
         return self.resids
+
+    def get_beta(self) -> pd.Series:
+        param_headers = [x for x in self.params.columns if x != "const"]
+
+        beta_series = self.params[param_headers]
+
+        return beta_series

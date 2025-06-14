@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 
 import numpy as np
+import pandas as pd
 import statsmodels.api as sm
 from statsmodels.regression.rolling import RollingOLS
 
@@ -48,3 +49,10 @@ class RollingWindowRegressor(Regressor):
         self.resids = df["Residuals"]
 
         return self.resids
+
+    def get_beta(self) -> pd.Series:
+        param_headers = [x for x in self.params.columns if x != "const"]
+
+        beta_series = self.params[param_headers]
+
+        return beta_series

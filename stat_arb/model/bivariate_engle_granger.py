@@ -93,6 +93,8 @@ class BivariateEngleGranger:
 
         self.regressor = regressor(self.close_prices[self.ticker_a], self.close_prices[self.ticker_b])
 
+        return self.regressor
+
     def get_residual(self, regressor_enum: RegressorEnum, regressor_inputs):
         self.regressor_factory(regressor_enum)
 
@@ -155,8 +157,8 @@ if __name__ == "__main__":
     data_enum = DataHandlerEnum.SIMULATED
     model = BivariateEngleGranger(ticker_a, ticker_b, start, end, live, data_enum)
 
-    strategy_type = StrategyEnum.ToyStrategy
-    strategy_inputs = ToyStrategyInputs(1, 0)
+    # strategy_type = StrategyEnum.ToyStrategy
+    # strategy_inputs = ToyStrategyInputs(1, 0)
 
     strategy_type = StrategyEnum.RollingWindow
     strategy_inputs = RollingWindowInputs(1, 0, 252)

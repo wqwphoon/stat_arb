@@ -30,7 +30,7 @@ class ToyStrategy(TradingStrategy):
         self.beta = self.to_series(beta)
 
         self.df: pd.DataFrame = pd.concat([price_x, price_y, self.resids, self.beta], axis=1)
-        cols = [f"{price_x.name}_close", f"{price_y.name}_close", "Residual", "Beta"]
+        cols = pd.Index([f"{price_x.name}_close", f"{price_y.name}_close", "Residual", "Beta"])
         self.df.columns = cols
 
     def to_series(self, vector: pd.Series | float | np.ndarray) -> pd.Series:

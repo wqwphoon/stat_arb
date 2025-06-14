@@ -1,7 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
 
-import numpy as np
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -11,16 +10,9 @@ logger = logging.getLogger(__name__)
 class Regressor(ABC):
 
     @abstractmethod
-    def get_residual(self):
+    def get_residual(self, inputs):
         pass
 
-    # @abstractmethod
-    # def get_beta(self):
-    #     pass
-
+    @abstractmethod
     def get_beta(self) -> pd.Series:
-        param_headers = [x for x in self.params.columns if x != "const"]
-
-        beta_series = self.params[param_headers]
-
-        return beta_series
+        pass
