@@ -43,9 +43,12 @@ class SimulatedDataHandler(BaseDataHandler):
 
         prices: np.ndarray = self.simulate_gbm(n_period, n_ticker)
 
-        prices_df: pd.DataFrame = pd.DataFrame(prices, columns=self.tickers, index=period)
+        self.prices_df: pd.DataFrame = pd.DataFrame(prices, columns=self.tickers, index=period)
 
-        return prices_df
+        return self.prices_df
+
+    def _check_prices_exist(self) -> bool:
+        return hasattr(self, "prices_df")
 
     def simulate_gbm(self, n_period, n_ticker) -> np.ndarray:
         rng: np.ndarray = self.get_correlated_random_numbers(n_period, n_ticker)
@@ -74,7 +77,11 @@ class SimulatedDataHandler(BaseDataHandler):
         return date.dayofweek not in [5, 6]
 
     def get_normalised_close_prices(self) -> pd.DataFrame:
-        close = self.get_close_prices()
+        if self._check_prices_exist():
+            close = self.prices_df
+        else:
+            close = self.get_close_prices()
+
         return close.div(close.iloc[0])
 
 
