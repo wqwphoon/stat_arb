@@ -34,7 +34,9 @@ class NaiveRegressor(Regressor):
 
         ols = sm.OLS(self.b, self.A).fit()
 
-        self.params = ols.params
+        betas = np.ones(shape=self.A.shape) * ols.params.values
+
+        self.params = pd.DataFrame(betas, index=self.A.index, columns=self.A.columns)
         self.resids = ols.resid
 
         return self.resids

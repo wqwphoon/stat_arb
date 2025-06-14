@@ -4,9 +4,9 @@ import logging
 import pandas as pd
 
 from stat_arb.model.data import DataHandlerEnum, DataHandlerFactory
-from stat_arb.model.regressor import NaiveRegressor, Regressor, RegressorEnum
+from stat_arb.model.regressor import NaiveRegressor, Regressor, RegressorEnum, RollingWindowRegressor
 from stat_arb.model.regressor.naive_regressor import NaiveRegressorInputs
-from stat_arb.model.regressor.rolling_window_regressor import RollingWindowRegressor
+from stat_arb.model.regressor.rolling_window_regressor import RollingWindowRegressorInputs
 from stat_arb.model.statistics import CointegratedAugmentedDickeyFuller, ErrorCorrectionModel
 from stat_arb.model.trading_strategy import (
     RollingWindow,
@@ -15,6 +15,7 @@ from stat_arb.model.trading_strategy import (
     TradingStrategy,
     TradingStrategyResults,
 )
+from stat_arb.model.trading_strategy.rolling_window import RollingWindowInputs
 from stat_arb.model.trading_strategy.toy_strategy import ToyStrategyInputs
 
 logger = logging.getLogger(__name__)
@@ -100,12 +101,22 @@ class BivariateEngleGranger:
         return self.resids
 
     def test_cadf(self) -> bool:
-        cadf = CointegratedAugmentedDickeyFuller.test_stationarity(self.resids, k_vars=2)
+        if self.resids.isna().any():
+            logger.info("Dropping nan values for CADF stationarity test...")
+
+        cadf = CointegratedAugmentedDickeyFuller.test_stationarity(self.resids.dropna(), k_vars=2)
         return cadf.significant_at_five_pct()
 
     def test_ecm(self) -> bool:
+        index_start = 0
+        if self.resids.isna().any():
+            logger.info("Dropping nan values for ECM mean reversion test...")
+            index_start = self.resids.isna().sum()
+
         ecm = ErrorCorrectionModel.fit(
-            self.close_prices[self.ticker_a], self.close_prices[self.ticker_b], pd.Series(self.resids)
+            self.close_prices[self.ticker_a].iloc[index_start:],
+            self.close_prices[self.ticker_b].iloc[index_start:],
+            pd.Series(self.resids).iloc[index_start:],
         )
         return ecm.is_long_run_mean_reverting()
 
@@ -147,8 +158,14 @@ if __name__ == "__main__":
     strategy_type = StrategyEnum.ToyStrategy
     strategy_inputs = ToyStrategyInputs(1, 0)
 
-    regressor_type = RegressorEnum.NAIVE
-    regressor_inputs = NaiveRegressorInputs(True)
+    strategy_type = StrategyEnum.RollingWindow
+    strategy_inputs = RollingWindowInputs(1, 0, 252)
 
-    model.run(regressor_type, regressor_inputs, strategy_type, strategy_inputs)
+    regressor_type = RegressorEnum.ROLLING_WINDOW
+    regressor_inputs = RollingWindowRegressorInputs(252)
+
+    # regressor_type = RegressorEnum.NAIVE
+    # regressor_inputs = NaiveRegressorInputs()
+
+    results = model.run(regressor_type, regressor_inputs, strategy_type, strategy_inputs)
     pass

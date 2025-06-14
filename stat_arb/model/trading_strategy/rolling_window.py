@@ -30,8 +30,9 @@ class RollingWindow(TradingStrategy):
         self.price_y = price_y
         self.beta = self.to_series(beta)
 
+        self.df: pd.DataFrame = pd.concat([price_x, price_y, self.resids, self.beta], axis=1)
         cols = [f"{price_x.name}_close", f"{price_y.name}_close", "Residual", "Beta"]
-        self.df: pd.DataFrame = pd.concat([price_x, price_y, self.resids, self.beta], axis=1, keys=cols)
+        self.df.columns = cols
 
     def to_series(self, vector: pd.Series | float | np.ndarray) -> pd.Series:
         if isinstance(vector, float):
@@ -88,7 +89,7 @@ class RollingWindow(TradingStrategy):
         self.df["Signal"] = signals
 
         self.df[f"{self.price_x.name}_returns"] = self.df[f"{self.price_x.name}_close"].pct_change()
-        self.df[f"{self.price_y.name}_returns"] = self.df[f"{self.price_x.name}_close"].pct_change()
+        self.df[f"{self.price_y.name}_returns"] = self.df[f"{self.price_y.name}_close"].pct_change()
 
         self.df["Portfolio_return"] = self.df["Signal"].shift(1) * (
             self.df[f"{self.price_x.name}_returns"]

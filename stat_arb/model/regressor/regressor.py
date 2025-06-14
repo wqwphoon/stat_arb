@@ -19,11 +19,8 @@ class Regressor(ABC):
     #     pass
 
     def get_beta(self) -> pd.Series:
-        param_header = [x for x in self.params.index if x != "const"][0]
+        param_headers = [x for x in self.params.columns if x != "const"]
 
-        n = len(self.resids)
-        beta_scalar = self.params[param_header]
-        beta_series = pd.Series(np.ones(shape=(n)) * beta_scalar)
-        beta_series.index = self.resids.index
+        beta_series = self.params[param_headers]
 
         return beta_series
