@@ -18,7 +18,7 @@ def rolling_window_regressor_inputs():
                             type="number",
                             min=1,
                             step=1,
-                            value=30,
+                            value=252,
                             id=IDS.REGRESSION.ID_ROLLING_WINDOW_REGRESSION.WINDOW_LENGTH,
                         ),
                         style={"width": "400px"},

@@ -20,9 +20,6 @@ def get_regressor_options():
 
 @callback(Output(IDS.GRAPHS.RESIDUAL, "figure"), Input(IDS.REGRESSION.INPUTS_STORE, "data"))
 def plot_residual(regression_inputs):
-
-    logger.debug(f"{regression_inputs=}")
-
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
 
     inputs = unpack_regression_inputs(regression_inputs)
@@ -56,9 +53,6 @@ def update_regression_store(
     regression_type,
     regression_values,
 ):
-    logger.debug(f"{regression_type=}")
-    logger.debug(f"{regression_values=}")
-
     matched_inputs = {item["id"]["property"]: item["value"] for item in ctx.inputs_list[1]}
 
     return {"regression_type": regression_type, **matched_inputs}

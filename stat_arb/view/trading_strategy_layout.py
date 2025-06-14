@@ -90,7 +90,7 @@ def rolling_window_inputs():
                             type="number",
                             min=1,
                             step=1,
-                            value=30,
+                            value=252,
                             id=IDS.STRATEGY.ID_ROLLING_WINDOW.LENGTH,
                         ),
                         style={"width": "400px"},

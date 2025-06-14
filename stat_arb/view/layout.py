@@ -59,7 +59,7 @@ def layout():
                                 id=IDS.STORE_INPUTS.DATE_RANGE,
                                 min_date_allowed=dt.datetime(2000, 1, 1),
                                 max_date_allowed=dt.datetime.today() - dt.timedelta(1),
-                                start_date=dt.datetime(2023, 1, 1),
+                                start_date=dt.datetime(2018, 1, 1),
                                 end_date=dt.datetime(2024, 12, 31),
                             ),
                         ],
