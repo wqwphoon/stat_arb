@@ -70,18 +70,35 @@ def plot_strategy_backtest(strategy_inputs):
 
     df = trading_strategy_results.get_backtest()
 
-    fig = plotly.subplots.make_subplots(specs=[[{"secondary_y": True}]])
+    fig = px.line(df, y=["Residual"], title="Residual")
 
-    fig1 = px.line(df, y=["Z-Score", "Signal"], title="Signal / Z-Score (Primary Y)")
-    # fig2 = px.line(df, y=["Residual"], title="Residual (Secondary Y)")
+    shapes = []
+    dates = df.index
+    for i, signal in enumerate(df["Signal"]):
 
-    fig.add_traces(fig1.data)
+        if i != len(df) - 1:
+            colour = None
+            if signal == 1:
+                colour = "green"
+            elif signal == -1:
+                colour = "red"
 
-    # for trace in fig2.data:
-    #     trace.showlegend = True
-    #     fig.add_traces(trace, secondary_ys=[True])
+            shapes.append(
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": dates[i],
+                    "y0": 0,
+                    "x1": dates[i + 1],
+                    "y1": 1,
+                    "fillcolor": colour,
+                    "opacity": 0.2,
+                    "line_width": 0,
+                }
+            )
 
-    fig.update_layout(title_text="Trading Strategy", height=800)
+    fig.update_layout(title_text="Trading Strategy", height=800, shapes=shapes)
 
     return fig
 
