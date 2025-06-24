@@ -37,7 +37,8 @@ class IDS:
         INPUTS_DIV = "strategy-inputs-div"
         INPUTS_STORE = "strategy-inputs-store"
         OUTPUT_DIV = "strategy-output-div"
-        OUTPUT_PLOT = "strategy-output-plot"
+        OUTPUT_BACKTEST_PLOT = "strategy-backtest-plot"
+        OUTPUT_CUM_RETS_PLOT = "strategy-cumulative-returns-plot"
 
         class ID_TOY_STRATEGY:
             ENTER = {"id_type": STRATEGY_INPUT, "name": "toy-strategy", "property": "enter"}

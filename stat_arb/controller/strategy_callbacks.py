@@ -60,7 +60,7 @@ def strategy_output_div(store):
     )
 
 
-@callback(Output(IDS.STRATEGY.OUTPUT_PLOT, "figure"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
+@callback(Output(IDS.STRATEGY.OUTPUT_BACKTEST_PLOT, "figure"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
 def plot_strategy_backtest(strategy_inputs):
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
 
@@ -70,7 +70,9 @@ def plot_strategy_backtest(strategy_inputs):
 
     df = trading_strategy_results.get_backtest()
 
-    fig = px.line(df, y=["Residual"], title="Residual")
+    fig = plotly.subplots.make_subplots(rows=2, cols=1, subplot_titles=("Backtest", "Cumulative Return"))
+
+    fig1 = px.line(df, y=["Residual"], title="Residual")
 
     shapes = []
     dates = df.index
@@ -87,20 +89,42 @@ def plot_strategy_backtest(strategy_inputs):
                 {
                     "type": "rect",
                     "xref": "x",
-                    "yref": "paper",
+                    "yref": "y1",
                     "x0": dates[i],
-                    "y0": 0,
+                    "y0": -abs(2 * df["Residual"].min()),
                     "x1": dates[i + 1],
-                    "y1": 1,
+                    "y1": abs(2 * df["Residual"].max()),
                     "fillcolor": colour,
                     "opacity": 0.2,
                     "line_width": 0,
                 }
             )
 
-    fig.update_layout(title_text="Trading Strategy", height=800, shapes=shapes)
+    fig1.update_layout(title_text="Trading Strategy", height=800, shapes=shapes)
+
+    fig2 = px.line(df, y=["Cumulative_return"], title="Cumulative Return")
+
+    for trace in fig1.data:
+        fig.add_traces(trace, rows=1, cols=1)
+
+    for trace in fig2.data:
+        trace.showlegend = False
+        fig.add_traces(trace, rows=2, cols=1)
+
+    fig.update_layout(title_text="Trading Strategy Plots", height=800, shapes=shapes)
 
     return fig
+
+
+@callback(
+    Output(IDS.STRATEGY.OUTPUT_CUM_RETS_PLOT, "figure"), Input(IDS.STRATEGY.OUTPUT_BACKTEST_PLOT, "figure")
+)
+def plot_strategy_cum_return(strategy_inputs):
+    model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
+
+    df = model.backtest_results.get_backtest()
+
+    return px.line(df, y=["Cumulative_return"], title="Cumulative Return")
 
 
 def unpack_strategy_inputs(strategy_inputs: dict):

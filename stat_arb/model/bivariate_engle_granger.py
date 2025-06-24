@@ -141,9 +141,10 @@ class BivariateEngleGranger:
         return self.strategy
 
     def backtest(self, strategy_type: StrategyEnum, strategy_inputs) -> TradingStrategyResults:
-        self.trading_strategy_factory(strategy_type)
+        if not hasattr(self, "backtest_results"):
+            self.trading_strategy_factory(strategy_type)
 
-        self.backtest_results = self.strategy.backtest(strategy_inputs)
+            self.backtest_results = self.strategy.backtest(strategy_inputs)
 
         return self.backtest_results
 
