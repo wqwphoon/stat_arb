@@ -1,9 +1,10 @@
 from logging import getLogger
 
+import pandas as pd
 import plotly
 import plotly.express as px
 import plotly.subplots
-from dash import ALL, Input, Output, callback, ctx, html
+from dash import ALL, Input, Output, callback, ctx, dash_table, html
 
 from stat_arb.controller.callbacks import MODEL, SINGLE_USER_INSTANCE
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
@@ -50,14 +51,33 @@ def update_strategy_store(
 def strategy_output_div(store):
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
 
+    results = model.backtest_results
+    data_dict = {
+        "Sharpe Ratio": f"{results.get_sharpe_ratio():.2f}",
+        "Sortino Ratio": f"{results.get_sortino_ratio():.2f}",
+        "Annualised Return": f"{results.get_annualised_return():.2%}",
+        "Annualised Volatility": f"{results.get_annualised_vol():.2%}",
+        "Maximum Drawdown": f"{results.get_max_drawdown():.2%}",
+    }
+
+    table_data = [{"Metric": k, "Value": v} for k, v in data_dict.items()]
+
     return html.Div(
-        [
-            html.P(f"Chosen Strategy: {store["strategy_type"]}"),
-            html.P(f"Enter Threshold: {store["enter"]}"),
-            html.P(f"Exit Threshold: {store["exit"]}"),
-            html.P(f"Cumulative Return: {model.backtest_results.get_cum_return():.4f}"),
-        ]
+        dash_table.DataTable(
+            table_data,
+            [{"name": "Metric", "id": "Metric"}, {"name": "Value", "id": "Value"}],
+            style_table={"width": "50%"},
+        )
     )
+
+    # return html.Div(
+    #     [
+    #         html.P(f"Chosen Strategy: {store["strategy_type"]}"),
+    #         html.P(f"Enter Threshold: {store["enter"]}"),
+    #         html.P(f"Exit Threshold: {store["exit"]}"),
+    #         html.P(f"Cumulative Return: {model.backtest_results.get_cum_return():.4f}"),
+    #     ]
+    # )
 
 
 @callback(Output(IDS.STRATEGY.OUTPUT_BACKTEST_PLOT, "figure"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
@@ -114,17 +134,6 @@ def plot_strategy_backtest(strategy_inputs):
     fig.update_layout(title_text="Trading Strategy Plots", height=800, shapes=shapes)
 
     return fig
-
-
-@callback(
-    Output(IDS.STRATEGY.OUTPUT_CUM_RETS_PLOT, "figure"), Input(IDS.STRATEGY.OUTPUT_BACKTEST_PLOT, "figure")
-)
-def plot_strategy_cum_return(strategy_inputs):
-    model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
-
-    df = model.backtest_results.get_backtest()
-
-    return px.line(df, y=["Cumulative_return"], title="Cumulative Return")
 
 
 def unpack_strategy_inputs(strategy_inputs: dict):
