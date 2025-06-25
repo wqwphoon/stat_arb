@@ -47,8 +47,8 @@ def update_strategy_store(
     return {"strategy_type": strategy_type, **matched_inputs}
 
 
-@callback(Output(IDS.STRATEGY.OUTPUT_DIV, "children"), Input(IDS.STRATEGY.INPUTS_STORE, "data"))
-def strategy_output_div(store):
+@callback(Output(IDS.STRATEGY.OUTPUT_DIV, "children"), Input(IDS.STRATEGY.OUTPUT_BACKTEST_PLOT, "figure"))
+def strategy_output_div(_):
     model: BivariateEngleGranger = SINGLE_USER_INSTANCE[MODEL]
 
     results = model.backtest_results
