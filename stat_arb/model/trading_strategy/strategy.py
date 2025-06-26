@@ -62,8 +62,9 @@ class TradingStrategyResults:
 
     def get_annualised_return(self) -> float:
         trading_days = self.period_return.notna().sum()
+        trading_years = trading_days / 252
 
-        return (self.get_cum_return() ** (252 / trading_days)) - 1
+        return (self.get_cum_return() ** (1 / trading_years)) - 1
 
     def get_annualised_vol(self) -> float:
         return self.period_return.std() * np.sqrt(252)
