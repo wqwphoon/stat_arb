@@ -1,6 +1,5 @@
 from logging import getLogger
 
-import pandas as pd
 import plotly
 import plotly.express as px
 import plotly.subplots
@@ -86,7 +85,7 @@ def plot_strategy_backtest(strategy_inputs):
 
     inputs = unpack_strategy_inputs(strategy_inputs)
 
-    trading_strategy_results = model.backtest(strategy_inputs["strategy_type"], inputs)
+    trading_strategy_results = model.backtest(strategy_inputs["strategy_type"], inputs, force_refresh=True)
 
     df = trading_strategy_results.get_backtest()
 
