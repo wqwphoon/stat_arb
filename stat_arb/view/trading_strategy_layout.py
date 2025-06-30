@@ -8,37 +8,17 @@ def toy_strategy_inputs():
         [
             html.Div(
                 [
-                    html.P("Enter Threshold:"),
-                    html.Div(
-                        dcc.Slider(
-                            min=0,
-                            max=5,
-                            step=0.1,
-                            id=IDS.STRATEGY.ID_TOY_STRATEGY.ENTER,
-                            marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
-                            value=1,
-                        ),
-                        style={"width": "400px"},
-                    ),
+                    html.Label("Enter Threshold: "),
+                    dcc.Input(type="number", value=1, step=0.01, id=IDS.STRATEGY.ID_TOY_STRATEGY.ENTER),
                 ],
-                style={"display": "flex", "width": "50%", "marginTop": "20px"},
+                style={"marginTop": "20px"},
             ),
             html.Div(
                 [
-                    html.P("Choose Exit Threshold"),
-                    html.Div(
-                        dcc.Slider(
-                            min=0,
-                            max=5,
-                            step=0.1,
-                            id=IDS.STRATEGY.ID_TOY_STRATEGY.EXIT,
-                            marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
-                            value=0,
-                        ),
-                        style={"width": "400px"},
-                    ),
+                    html.Label("Exit Threshold: "),
+                    dcc.Input(type="number", value=0, step=0.05, id=IDS.STRATEGY.ID_TOY_STRATEGY.EXIT),
                 ],
-                style={"display": "flex", "width": "50%", "marginTop": "20px"},
+                style={"marginTop": "10px"},
             ),
             dcc.Store(id=IDS.STRATEGY.INPUTS_STORE),
         ]
@@ -50,53 +30,26 @@ def rolling_window_inputs():
         [
             html.Div(
                 [
-                    html.P("Enter Threshold:"),
-                    html.Div(
-                        dcc.Slider(
-                            min=0,
-                            max=5,
-                            step=0.1,
-                            id=IDS.STRATEGY.ID_ROLLING_WINDOW.ENTER,
-                            marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
-                            value=1,
-                        ),
-                        style={"width": "400px"},
-                    ),
+                    html.Label("Enter Threshold: "),
+                    dcc.Input(type="number", value=1, step=0.01, id=IDS.STRATEGY.ID_ROLLING_WINDOW.ENTER),
                 ],
-                style={"display": "flex", "width": "50%", "marginTop": "20px"},
+                style={"marginTop": "20px"},
             ),
             html.Div(
                 [
-                    html.P("Choose Exit Threshold"),
-                    html.Div(
-                        dcc.Slider(
-                            min=0,
-                            max=5,
-                            step=0.1,
-                            id=IDS.STRATEGY.ID_ROLLING_WINDOW.EXIT,
-                            marks={i / 10: str(i / 10) for i in range(0, 51, 5)},
-                            value=0,
-                        ),
-                        style={"width": "400px"},
-                    ),
+                    html.Label("Exit Threshold: "),
+                    dcc.Input(type="number", value=0, step=0.05, id=IDS.STRATEGY.ID_ROLLING_WINDOW.EXIT),
                 ],
-                style={"display": "flex", "width": "50%", "marginTop": "20px"},
+                style={"marginTop": "10px"},
             ),
             html.Div(
                 [
-                    html.P("Choose Window Length"),
-                    html.Div(
-                        dcc.Input(
-                            type="number",
-                            min=1,
-                            step=1,
-                            value=252,
-                            id=IDS.STRATEGY.ID_ROLLING_WINDOW.LENGTH,
-                        ),
-                        style={"width": "400px"},
+                    html.Label("Window Length: "),
+                    dcc.Input(
+                        type="number", min=1, step=1, value=252, id=IDS.STRATEGY.ID_ROLLING_WINDOW.LENGTH
                     ),
                 ],
-                style={"display": "flex", "width": "50%", "marginTop": "20px"},
+                style={"marginTop": "10px"},
             ),
             dcc.Store(id=IDS.STRATEGY.INPUTS_STORE),
         ]
