@@ -43,6 +43,7 @@ class NaiveRegressor(Regressor):
             self.params.columns = self.A.columns
 
         self.resids = ols.resid
+        self.resids.name = "Residuals"
 
         return self.resids
 
