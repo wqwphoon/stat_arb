@@ -8,6 +8,7 @@ class IDS:
         TICKER_A = "ticker-a"
         TICKER_B = "ticker-b"
         DATA_SOURCE = "data-source"
+        DATA_SOURCE_DESC = "data-source-desc"
         TEST_TRAIN_SPLIT = "test-train-split"
 
     class INPUTS:
@@ -15,6 +16,7 @@ class IDS:
 
     class REGRESSION:
         TYPE = "regression-type"
+        TYPE_DESC = "regression-type-desc"
         INPUTS_DIV = "regression-inputs-div"
         INPUTS_STORE = "regression-inputs-store"
 

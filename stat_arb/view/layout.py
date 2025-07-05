@@ -21,6 +21,7 @@ def layout():
                         value=callbacks.get_default_datasource_enum(),
                         style={"width": "40%"},
                     ),
+                    html.Div(id=IDS.STORE_INPUTS.DATA_SOURCE_DESC, style={"marginTop": "10px"}),
                 ]
             ),
             html.Div(
@@ -83,6 +84,7 @@ def layout():
                 [
                     html.H3("Step 3: Select Regression Method", style={"marginTop": "20px"}),
                     dcc.RadioItems(regression_callbacks.get_regressor_options(), id=IDS.REGRESSION.TYPE),
+                    html.Div(id=IDS.REGRESSION.TYPE_DESC, style={"marginTop": "10px"}),
                     html.Div(id=IDS.REGRESSION.INPUTS_DIV),
                     dcc.Graph(id=IDS.GRAPHS.RESIDUAL),
                 ]

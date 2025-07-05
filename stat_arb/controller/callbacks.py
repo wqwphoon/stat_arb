@@ -3,7 +3,7 @@ import logging
 import plotly
 import plotly.express as px
 import plotly.subplots
-from dash import Input, Output, State, callback, exceptions
+from dash import Input, Output, State, callback, exceptions, html
 
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
 from stat_arb.model.data.data_handler_enum import DataHandlerEnum, get_enum_from_str
@@ -93,3 +93,16 @@ def get_ecm_result(_):
         if ecm_result
         else "Absent of long run mean reversion at 5% significance level"
     )
+
+
+@callback(Output(IDS.STORE_INPUTS.DATA_SOURCE_DESC, "children"), Input(IDS.STORE_INPUTS.DATA_SOURCE, "value"))
+def get_data_source_desc(data_source_enum: DataHandlerEnum):
+    match data_source_enum:
+        case DataHandlerEnum.YAHOO:
+            text = "Source pricing analytics from live Yahoo Finance API."
+        case DataHandlerEnum.SIMULATED:
+            text = "Simulate pricing analytics using Euler Maruyama discretisation with correlated random numbers."
+        case DataHandlerEnum.LOCAL:
+            text = "Source pricing analytics from local database."
+
+    return html.H6(text)

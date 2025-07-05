@@ -1,7 +1,7 @@
 import logging
 
 import plotly.express as px
-from dash import ALL, Input, Output, callback, ctx
+from dash import ALL, Input, Output, callback, ctx, html
 
 from stat_arb.controller.callbacks import MODEL, SINGLE_USER_INSTANCE
 from stat_arb.model.bivariate_engle_granger import BivariateEngleGranger
@@ -73,3 +73,18 @@ def unpack_regression_inputs(regression_inputs: dict):
         case RegressorEnum.KALMAN_FILTER:
             raise NotImplementedError
     raise NotImplementedError
+
+
+@callback(Output(IDS.REGRESSION.TYPE_DESC, "children"), Input(IDS.REGRESSION.TYPE, "value"))
+def get_regression_desc(regression_type):
+    match regression_type:
+        case RegressorEnum.NAIVE:
+            text = "Finds a static beta via regression of the price series with lookahead bias."
+        case RegressorEnum.ROLLING_WINDOW:
+            text = (
+                "Finds a dynamic beta via rolling regression of the price series, with a window of length n."
+            )
+        case RegressorEnum.KALMAN_FILTER:
+            raise NotImplementedError
+
+    return html.H6(text)
