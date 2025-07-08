@@ -53,7 +53,7 @@ def layout():
                     ),
                     html.Div(
                         [
-                            html.P(
+                            html.Label(
                                 "Choose the start and end dates.",
                             ),
                             dcc.DatePickerRange(
@@ -92,21 +92,28 @@ def layout():
             html.Div(
                 [
                     html.H3("Step 4: Review Statistical Tests", style={"marginTop": "20px"}),
-                    dbc.Toast(
+                    html.Div(
                         [
-                            html.Div(id=IDS.STATISTICS.ADF_RESULT),
+                            dbc.Toast(
+                                [
+                                    html.Div(id=IDS.STATISTICS.ADF_RESULT),
+                                ],
+                                header="Cointegrated Augmented Dickey-Fuller Test",
+                                header_style={"textAlign": "center"},
+                                is_open=True,
+                                style={"marginTop": "20px", "width": "400px", "textAlign": "center"},
+                            ),
+                            dbc.Toast(
+                                [
+                                    html.Div(id=IDS.STATISTICS.ECM_RESULT),
+                                ],
+                                header="Error Correction Model",
+                                header_style={"textAlign": "center"},
+                                is_open=True,
+                                style={"marginTop": "20px", "width": "400px", "textAlign": "center"},
+                            ),
                         ],
-                        header="Cointegrated Augmented Dickey-Fuller Test Result",
-                        is_open=True,
-                        style={"marginTop": "20px"},
-                    ),
-                    dbc.Toast(
-                        [
-                            html.Div(id=IDS.STATISTICS.ECM_RESULT),
-                        ],
-                        header="Error Correction Model Result",
-                        is_open=True,
-                        style={"marginTop": "20px"},
+                        style={"display": "flex", "gap": "20px"},
                     ),
                 ]
             ),
